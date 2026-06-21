@@ -227,165 +227,6 @@ type
     }
     NGHTTP2_DEFAULT_MAX_SETTINGS = 32;
 
-  {*
-     * Out of buffer space.
-      }
-  {*
-     * The specified protocol version is not supported.
-      }
-  {*
-     * Used as a return value from :type:`nghttp2_send_callback2`,
-     * :type:`nghttp2_recv_callback` and
-     * :type:`nghttp2_send_data_callback` to indicate that the operation
-     * would block.
-      }
-  {*
-     * General protocol error
-      }
-  {*
-     * The frame is invalid.
-      }
-  {*
-     * The peer performed a shutdown on the connection.
-      }
-  {*
-     * Used as a return value from
-     * :func:`nghttp2_data_source_read_callback2` to indicate that data
-     * transfer is postponed.  See
-     * :func:`nghttp2_data_source_read_callback2` for details.
-      }
-  {*
-     * Stream ID has reached the maximum value.  Therefore no stream ID
-     * is available.
-      }
-  {*
-     * The stream is already closed; or the stream ID is invalid.
-      }
-  {*
-     * RST_STREAM has been added to the outbound queue.  The stream is
-     * in closing state.
-      }
-  {*
-     * The transmission is not allowed for this stream (e.g., a frame
-     * with END_STREAM flag set has already sent).
-      }
-  {*
-     * The stream ID is invalid.
-      }
-  {*
-     * The state of the stream is not valid (e.g., DATA cannot be sent
-     * to the stream if response HEADERS has not been sent).
-      }
-  {*
-     * Another DATA frame has already been deferred.
-      }
-  {*
-     * Starting new stream is not allowed (e.g., GOAWAY has been sent
-     * and/or received).
-      }
-  {*
-     * GOAWAY has already been sent.
-      }
-  {*
-     * The received frame contains the invalid header block (e.g., There
-     * are duplicate header names; or the header names are not encoded
-     * in US-ASCII character set and not lower cased; or the header name
-     * is zero-length string; or the header value contains multiple
-     * in-sequence NUL bytes).
-      }
-  {*
-     * Indicates that the context is not suitable to perform the
-     * requested operation.
-      }
-  {*
-     * The user callback function failed due to the temporal error.
-      }
-  {*
-     * The length of the frame is invalid, either too large or too small.
-      }
-  {*
-     * Header block inflate/deflate error.
-      }
-  {*
-     * Flow control error
-      }
-  {*
-     * Insufficient buffer size given to function.
-      }
-  {*
-     * Callback was paused by the application
-      }
-  {*
-     * There are too many in-flight SETTING frame and no more
-     * transmission of SETTINGS is allowed.
-      }
-  {*
-     * The server push is disabled.
-      }
-  {*
-     * DATA or HEADERS frame for a given stream has been already
-     * submitted and has not been fully processed yet.  Application
-     * should wait for the transmission of the previously submitted
-     * frame before submitting another.
-      }
-  {*
-     * The current session is closing due to a connection error or
-     * `nghttp2_session_terminate_session()` is called.
-      }
-  {*
-     * Invalid HTTP header field was received and stream is going to be
-     * closed.
-      }
-  {*
-     * Violation in HTTP messaging rule.
-      }
-  {*
-     * Stream was refused.
-      }
-  {*
-     * Unexpected internal error, but recovered.
-      }
-  {*
-     * Indicates that a processing was canceled.
-      }
-  {*
-     * When a local endpoint expects to receive SETTINGS frame, it
-     * receives an other type of frame.
-      }
-  {*
-     * When a local endpoint receives too many settings entries
-     * in a single SETTINGS frame.
-      }
-  {*
-     * The errors < :enum:`nghttp2_error.NGHTTP2_ERR_FATAL` mean that
-     * the library is under unexpected condition and processing was
-     * terminated (e.g., out of memory).  If application receives this
-     * error code, it must stop using that :type:`nghttp2_session`
-     * object and only allowed operation for that object is deallocate
-     * it using `nghttp2_session_del()`.
-      }
-  {*
-     * Out of memory.  This is a fatal error.
-      }
-  {*
-     * The user callback function failed.  This is a fatal error.
-      }
-  {*
-     * Invalid client magic (see :macro:`NGHTTP2_CLIENT_MAGIC`) was
-     * received and further processing is not possible.
-      }
-  {*
-     * Possible flooding by peer was detected in this HTTP/2 session.
-     * Flooding is measured by how many PING and SETTINGS frames with
-     * ACK flag set are queued for transmission.  These frames are
-     * response for the peer initiated frames, and peer can cause memory
-     * exhaustion on server side to send these frames forever and does
-     * not read network.
-      }
-  {*
-     * When a local endpoint receives too many CONTINUATION frames
-     * following a HEADER frame.
-      }
 
 type
     {*
@@ -396,241 +237,302 @@ type
       // Invalid argument passed.
       NGHTTP2_ERR_INVALID_ARGUMENT := -501,
 
-
+      // Out of buffer space.
       NGHTTP2_ERR_BUFFER_ERROR := -502,
+
+      // The specified protocol version is not supported.
       NGHTTP2_ERR_UNSUPPORTED_VERSION := -503,
-      NGHTTP2_ERR_WOULDBLOCK := -(504),
-      NGHTTP2_ERR_PROTO := -(505),
-      NGHTTP2_ERR_INVALID_FRAME := -(506),
-      NGHTTP2_ERR_EOF := -(507),
-      NGHTTP2_ERR_DEFERRED := -(508),
-      NGHTTP2_ERR_STREAM_ID_NOT_AVAILABLE := -(509),
-      NGHTTP2_ERR_STREAM_CLOSED := -(510),
-      NGHTTP2_ERR_STREAM_CLOSING := -(511),
-      NGHTTP2_ERR_STREAM_SHUT_WR := -(512),
-      NGHTTP2_ERR_INVALID_STREAM_ID := -(513),
-      NGHTTP2_ERR_INVALID_STREAM_STATE := -(514),
-      NGHTTP2_ERR_DEFERRED_DATA_EXIST := -(515),
-      NGHTTP2_ERR_START_STREAM_NOT_ALLOWED := -(516),
-      NGHTTP2_ERR_GOAWAY_ALREADY_SENT := -(517),
-      NGHTTP2_ERR_INVALID_HEADER_BLOCK := -(518),
-      NGHTTP2_ERR_INVALID_STATE := -(519),
-      NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE := -(521),
-      NGHTTP2_ERR_FRAME_SIZE_ERROR := -(522),
-      NGHTTP2_ERR_HEADER_COMP := -(523),
-      NGHTTP2_ERR_FLOW_CONTROL := -(524),
-      NGHTTP2_ERR_INSUFF_BUFSIZE := -(525),
-      NGHTTP2_ERR_PAUSE := -(526),
-      NGHTTP2_ERR_TOO_MANY_INFLIGHT_SETTINGS := -(527),
-      NGHTTP2_ERR_PUSH_DISABLED := -(528),
-      NGHTTP2_ERR_DATA_EXIST := -(529),
-      NGHTTP2_ERR_SESSION_CLOSING := -(530),
-      NGHTTP2_ERR_HTTP_HEADER := -(531),
-      NGHTTP2_ERR_HTTP_MESSAGING := -(532),
-      NGHTTP2_ERR_REFUSED_STREAM := -(533),
-      NGHTTP2_ERR_INTERNAL := -(534),
-      NGHTTP2_ERR_CANCEL := -(535),
-      NGHTTP2_ERR_SETTINGS_EXPECTED := -(536),
-      NGHTTP2_ERR_TOO_MANY_SETTINGS := -(537),
-      NGHTTP2_ERR_FATAL := -(900),
-      NGHTTP2_ERR_NOMEM := -(901),
-      NGHTTP2_ERR_CALLBACK_FAILURE := -(902),
-      NGHTTP2_ERR_BAD_CLIENT_MAGIC := -(903),
-      NGHTTP2_ERR_FLOODED := -(904),
-      NGHTTP2_ERR_TOO_MANY_CONTINUATIONS := -(905)
+
+      // Used as a return value from nghttp2_send_callback2,
+      // nghttp2_recv_callback and
+      // nghttp2_send_data_callback to indicate that the operation
+      // would block.
+      NGHTTP2_ERR_WOULDBLOCK := -504,
+
+      // General protocol error
+      NGHTTP2_ERR_PROTO := -505,
+
+      // The frame is invalid.
+      NGHTTP2_ERR_INVALID_FRAME := -506,
+
+      // The peer performed a shutdown on the connection.
+      NGHTTP2_ERR_EOF := -507,
+
+      // Used as a return value from
+      // nghttp2_data_source_read_callback2 to indicate that data
+      // transfer is postponed. See
+      // nghttp2_data_source_read_callback2 for details.
+      NGHTTP2_ERR_DEFERRED := -508,
+
+      // Stream ID has reached the maximum value.  Therefore no stream ID
+      // is available.
+      NGHTTP2_ERR_STREAM_ID_NOT_AVAILABLE := -509,
+
+      // The stream is already closed; or the stream ID is invalid.
+      NGHTTP2_ERR_STREAM_CLOSED := -510,
+
+      // RST_STREAM has been added to the outbound queue. The stream is
+      // in closing state.
+      NGHTTP2_ERR_STREAM_CLOSING := -511,
+
+      // The transmission is not allowed for this stream (e.g., a frame
+      // with END_STREAM flag set has already sent).
+      NGHTTP2_ERR_STREAM_SHUT_WR := -512,
+
+      // The stream ID is invalid.
+      NGHTTP2_ERR_INVALID_STREAM_ID := -513,
+
+      // The state of the stream is not valid (e.g., DATA cannot be sent
+      // to the stream if response HEADERS has not been sent).
+      NGHTTP2_ERR_INVALID_STREAM_STATE := -514,
+
+      // Another DATA frame has already been deferred.
+      NGHTTP2_ERR_DEFERRED_DATA_EXIST := -515,
+
+      // Starting new stream is not allowed (e.g., GOAWAY has been sent
+      // and/or received).
+      NGHTTP2_ERR_START_STREAM_NOT_ALLOWED := -516,
+
+      // GOAWAY has already been sent.
+      NGHTTP2_ERR_GOAWAY_ALREADY_SENT := -517,
+
+      // The received frame contains the invalid header block (e.g., There
+      // are duplicate header names; or the header names are not encoded
+      // in US-ASCII character set and not lower cased; or the header name
+      // is zero-length string; or the header value contains multiple
+      // in-sequence NUL bytes).
+      NGHTTP2_ERR_INVALID_HEADER_BLOCK := -518,
+
+      // Indicates that the context is not suitable to perform the
+      // requested operation.
+      NGHTTP2_ERR_INVALID_STATE := -519,
+
+      // The user callback function failed due to the temporal error.
+      NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE := -521,
+
+      // The length of the frame is invalid, either too large or too small.
+      NGHTTP2_ERR_FRAME_SIZE_ERROR := -522,
+
+      // Header block inflate/deflate error.
+      NGHTTP2_ERR_HEADER_COMP := -523,
+
+      // Flow control error
+      NGHTTP2_ERR_FLOW_CONTROL := -524,
+
+      // Insufficient buffer size given to function.
+      NGHTTP2_ERR_INSUFF_BUFSIZE := -525,
+
+      // Callback was paused by the application
+      NGHTTP2_ERR_PAUSE := -526,
+
+      // There are too many in-flight SETTING frame and no more
+      // transmission of SETTINGS is allowed.
+      NGHTTP2_ERR_TOO_MANY_INFLIGHT_SETTINGS := -527,
+
+      // The server push is disabled.
+      NGHTTP2_ERR_PUSH_DISABLED := -528,
+
+      // DATA or HEADERS frame for a given stream has been already
+      // submitted and has not been fully processed yet.  Application
+      // should wait for the transmission of the previously submitted
+      // frame before submitting another.
+      NGHTTP2_ERR_DATA_EXIST := -529,
+
+      // The current session is closing due to a connection error or
+      // `nghttp2_session_terminate_session()` is called.
+      NGHTTP2_ERR_SESSION_CLOSING := -530,
+
+      // Invalid HTTP header field was received and stream is going to be
+      // closed.
+      NGHTTP2_ERR_HTTP_HEADER := -531,
+
+      // Violation in HTTP messaging rule.
+      NGHTTP2_ERR_HTTP_MESSAGING := -532,
+
+      // Stream was refused.
+      NGHTTP2_ERR_REFUSED_STREAM := -533,
+
+      // Unexpected internal error, but recovered.
+      NGHTTP2_ERR_INTERNAL := -534,
+
+      // Indicates that a processing was canceled.
+      NGHTTP2_ERR_CANCEL := -535,
+
+      // When a local endpoint expects to receive SETTINGS frame, it
+      // receives an other type of frame.
+      NGHTTP2_ERR_SETTINGS_EXPECTED := -536,
+
+      // When a local endpoint receives too many settings entries
+      // in a single SETTINGS frame.
+      NGHTTP2_ERR_TOO_MANY_SETTINGS := -537,
+
+      // The errors < :enum:`nghttp2_error.NGHTTP2_ERR_FATAL` mean that
+      // The library is under unexpected condition and processing was
+      // terminated (e.g., out of memory).  If application receives this
+      // error code, it must stop using that :type:`nghttp2_session`
+      // object and only allowed operation for that object is deallocate
+      // it using `nghttp2_session_del()`.
+      NGHTTP2_ERR_FATAL := -900,
+
+      // Out of memory.  This is a fatal error.
+      NGHTTP2_ERR_NOMEM := -901,
+
+      // The user callback function failed.  This is a fatal error.
+      NGHTTP2_ERR_CALLBACK_FAILURE := -902,
+
+      // Invalid client magic (see :macro:`NGHTTP2_CLIENT_MAGIC`) was
+      // received and further processing is not possible.
+      NGHTTP2_ERR_BAD_CLIENT_MAGIC := -903,
+
+      // Possible flooding by peer was detected in this HTTP/2 session.
+      // Flooding is measured by how many PING and SETTINGS frames with
+      // ACK flag set are queued for transmission.  These frames are
+      // response for the peer initiated frames, and peer can cause memory
+      // exhaustion on server side to send these frames forever and does
+      // not read network.
+      NGHTTP2_ERR_FLOODED := -904,
+
+      // When a local endpoint receives too many CONTINUATION frames
+      // following a HEADER frame.
+      NGHTTP2_ERR_TOO_MANY_CONTINUATIONS := -905
     );
-  {*
-   * @struct
-   *
-   * The object representing single contiguous buffer.
-    }
-  {*
-     * The pointer to the buffer.
-      }
-  {*
-     * The length of the buffer.
-      }
 
+    // The object representing single contiguous buffer.
     nghttp2_vec = record
+        // The pointer to the buffer.
         base : ^uint8_t;
+
+        // The length of the buffer.
         len : size_t;
-      end;
+    end;
+
+    // The object representing reference counted buffer.  The details of
+    // this structure are intentionally hidden from the public API.
     nghttp2_rcbuf = record
-        {undefined structure}
-      end;
+      {undefined structure}
+    end;
+    pnghttp2_rcbuf = ^nghttp2_rcbuf;
 
-  {*
-   * @struct
-   *
-   * The object representing reference counted buffer.  The details of
-   * this structure are intentionally hidden from the public API.
-    }
-  {*
-   * @function
-   *
-   * Increments the reference count of |rcbuf| by 1.
-    }
-(* error
-NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf);
-in declaration at line 512 *)
-    {*
-     * @function
-     *
-     * Decrements the reference count of |rcbuf| by 1.  If the reference
-     * count becomes zero, the object pointed by |rcbuf| will be freed.
-     * In this case, application must not use |rcbuf| again.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf);
-in declaration at line 521 *)
-    {*
-     * @function
-     *
-     * Returns the underlying buffer managed by |rcbuf|.
-      }
-(* error
-NGHTTP2_EXTERN nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf);
- in declarator_list *)
-    {*
-     * @function
-     *
-     * Returns nonzero if the underlying buffer is statically allocated,
-     * and 0 otherwise. This can be useful for language bindings that wish
-     * to avoid creating duplicate strings for these buffers.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf);
-in declaration at line 537 *)
-    {*
-     * @enum
-     *
-     * The flags for header field name/value pair.
-      }
-    {*
-       * No flag set.
-        }
-    {*
-       * Indicates that this name/value pair must not be indexed ("Literal
-       * Header Field never Indexed" representation must be used in HPACK
-       * encoding).  Other implementation calls this bit as "sensitive".
-        }
-    {*
-       * This flag is set solely by application.  If this flag is set, the
-       * library does not make a copy of header field name.  This could
-       * improve performance.
-        }
-    {*
-       * This flag is set solely by application.  If this flag is set, the
-       * library does not make a copy of header field value.  This could
-       * improve performance.
-        }
+    // Increments the reference count of |rcbuf| by 1.
+    procedure nghttp2_rcbuf_incref(rcbuf: pnghttp2_rcbuf); cdecl; external;
 
-      nghttp2_nv_flag = (NGHTTP2_NV_FLAG_NONE := 0,NGHTTP2_NV_FLAG_NO_INDEX := $01,
-        NGHTTP2_NV_FLAG_NO_COPY_NAME := $02,
-        NGHTTP2_NV_FLAG_NO_COPY_VALUE := $04
-        );
-    {*
-     * @struct
-     *
-     * The name/value pair, which mainly used to represent header fields.
-      }
-    {*
-       * The |name| byte string.  If this struct is presented from library
-       * (e.g., :type:`nghttp2_on_frame_recv_callback`), |name| is
-       * guaranteed to be NULL-terminated.  For some callbacks
-       * (:type:`nghttp2_before_frame_send_callback`,
-       * :type:`nghttp2_on_frame_send_callback`, and
-       * :type:`nghttp2_on_frame_not_send_callback`), it may not be
-       * NULL-terminated if header field is passed from application with
-       * the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_NAME`).
-       * When application is constructing this struct, |name| is not
-       * required to be NULL-terminated.
-        }
-    {*
-       * The |value| byte string.  If this struct is presented from
-       * library (e.g., :type:`nghttp2_on_frame_recv_callback`), |value|
-       * is guaranteed to be NULL-terminated.  For some callbacks
-       * (:type:`nghttp2_before_frame_send_callback`,
-       * :type:`nghttp2_on_frame_send_callback`, and
-       * :type:`nghttp2_on_frame_not_send_callback`), it may not be
-       * NULL-terminated if header field is passed from application with
-       * the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_VALUE`).
-       * When application is constructing this struct, |value| is not
-       * required to be NULL-terminated.
-        }
-    {*
-       * The length of the |name|, excluding terminating NULL.
-        }
-    {*
-       * The length of the |value|, excluding terminating NULL.
-        }
-    {*
-       * Bitwise OR of one or more of :type:`nghttp2_nv_flag`.
-        }
+    // Decrements the reference count of |rcbuf| by 1.  If the reference
+    // count becomes zero, the object pointed by |rcbuf| will be freed.
+    // In this case, application must not use |rcbuf| again.
+    procedure nghttp2_rcbuf_decref(rcbuf: pnghttp2_rcbuf); cdecl; external;
 
-      nghttp2_nv = record
-          name : ^uint8_t;
-          value : ^uint8_t;
-          namelen : size_t;
-          valuelen : size_t;
-          flags : uint8_t;
-        end;
-    {*
-     * @enum
-     *
-     * The frame types in HTTP/2 specification.
-      }
-    {*
-       * The DATA frame.
-        }
-    {*
-       * The HEADERS frame.
-        }
-    {*
-       * The PRIORITY frame.
-        }
-    {*
-       * The RST_STREAM frame.
-        }
-    {*
-       * The SETTINGS frame.
-        }
-    {*
-       * The PUSH_PROMISE frame.
-        }
-    {*
-       * The PING frame.
-        }
-    {*
-       * The GOAWAY frame.
-        }
-    {*
-       * The WINDOW_UPDATE frame.
-        }
-    {*
-       * The CONTINUATION frame.  This frame type won't be passed to any
-       * callbacks because the library processes this frame type and its
-       * preceding HEADERS/PUSH_PROMISE as a single frame.
-        }
-    {*
-       * The ALTSVC frame, which is defined in `RFC 7383
-       * <https://tools.ietf.org/html/rfc7838#section-4>`_.
-        }
-    {*
-       * The ORIGIN frame, which is defined by `RFC 8336
-       * <https://tools.ietf.org/html/rfc8336>`_.
-        }
-    {*
-       * The PRIORITY_UPDATE frame, which is defined by :rfc:`9218`.
-        }
+    // Returns the underlying buffer managed by |rcbuf|.
+    function nghttp2_rcbuf_get_buf(rcbuf: pnghttp2_rcbuf): nghttp2_vec; cdecl; external;
 
-      nghttp2_frame_type = (NGHTTP2_DATA := 0,NGHTTP2_HEADERS := $01,
-        NGHTTP2_PRIORITY := $02,NGHTTP2_RST_STREAM := $03,
-        NGHTTP2_SETTINGS := $04,NGHTTP2_PUSH_PROMISE := $05,
-        NGHTTP2_PING := $06,NGHTTP2_GOAWAY := $07,
-        NGHTTP2_WINDOW_UPDATE := $08,NGHTTP2_CONTINUATION := $09,
-        NGHTTP2_ALTSVC := $0A,NGHTTP2_ORIGIN := $0C,
-        NGHTTP2_PRIORITY_UPDATE := $10);
+    // Returns nonzero if the underlying buffer is statically allocated,
+    // and 0 otherwise. This can be useful for language bindings that wish
+    // to avoid creating duplicate strings for these buffers.
+    function nghttp2_rcbuf_is_static(const rcbuf: pnghttp2_rcbuf): longint; cdecl; external;
+
+
+    //The flags for header field name/value pair.
+    nghttp2_nv_flag = (
+      // No flag set.
+      NGHTTP2_NV_FLAG_NONE := 0,
+
+      // Indicates that this name/value pair must not be indexed ("Literal
+      // Header Field never Indexed" representation must be used in HPACK
+      // encoding).  Other implementation calls this bit as "sensitive".
+      NGHTTP2_NV_FLAG_NO_INDEX := $01,
+
+      // This flag is set solely by application.  If this flag is set, the
+      // library does not make a copy of header field name.  This could
+      // improve performance.
+      NGHTTP2_NV_FLAG_NO_COPY_NAME := $02,
+
+      // This flag is set solely by application.  If this flag is set, the
+      // library does not make a copy of header field value.  This could
+      // improve performance.
+      NGHTTP2_NV_FLAG_NO_COPY_VALUE := $04
+    );
+
+    // The name/value pair, which mainly used to represent header fields.
+    nghttp2_nv = record
+        // The |name| byte string.  If this struct is presented from library
+        // (e.g., `nghttp2_on_frame_recv_callback`), |name| is
+        // guaranteed to be NULL-terminated.  For some callbacks
+        // (`nghttp2_before_frame_send_callback`,
+        // `nghttp2_on_frame_send_callback`, and
+        // `nghttp2_on_frame_not_send_callback`), it may not be
+        // NULL-terminated if header field is passed from application with
+        // the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_NAME`).
+        // When application is constructing this struct, |name| is not
+        // required to be NULL-terminated.
+        name : ^uint8_t;
+
+        // The |value| byte string.  If this struct is presented from
+        // library (e.g., `nghttp2_on_frame_recv_callback`), |value|
+        // is guaranteed to be NULL-terminated.  For some callbacks
+        // (`nghttp2_before_frame_send_callback`,
+        // `nghttp2_on_frame_send_callback`, and
+        // `nghttp2_on_frame_not_send_callback`), it may not be
+        // NULL-terminated if header field is passed from application with
+        // the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_VALUE`).
+        // When application is constructing this struct, |value| is not
+        // required to be NULL-terminated.
+        value : ^uint8_t;
+
+        // The length of the |name|, excluding terminating NULL.
+        namelen : size_t;
+
+        // The length of the |value|, excluding terminating NULL.
+        valuelen : size_t;
+
+        // Bitwise OR of one or more of `nghttp2_nv_flag`.
+        flags : uint8_t;
+    end;
+
+    // The frame types in HTTP/2 specification.
+    nghttp2_frame_type = (
+        // The DATA frame.
+        NGHTTP2_DATA := 0,
+
+        // The HEADERS frame.
+        NGHTTP2_HEADERS := $01,
+
+        // The PRIORITY frame.
+        NGHTTP2_PRIORITY := $02,
+
+        // The RST_STREAM frame.
+        NGHTTP2_RST_STREAM := $03,
+
+        // The SETTINGS frame.
+        NGHTTP2_SETTINGS := $04,
+
+        // The PUSH_PROMISE frame.
+        NGHTTP2_PUSH_PROMISE := $05,
+
+        // The PING frame.
+        NGHTTP2_PING := $06,
+
+        // The GOAWAY frame.
+        NGHTTP2_GOAWAY := $07,
+
+        // The WINDOW_UPDATE frame.
+        NGHTTP2_WINDOW_UPDATE := $08,
+
+        // The CONTINUATION frame.  This frame type won't be passed to any
+        // callbacks because the library processes this frame type and its
+        // preceding HEADERS/PUSH_PROMISE as a single frame.
+        NGHTTP2_CONTINUATION := $09,
+
+        // The ALTSVC frame, which is defined in `RFC 7383
+        // <https://tools.ietf.org/html/rfc7838#section-4>`_.
+        NGHTTP2_ALTSVC := $0A,
+
+        // The ORIGIN frame, which is defined by `RFC 8336
+        // <https://tools.ietf.org/html/rfc8336>`_.
+        NGHTTP2_ORIGIN := $0C,
+
+        // The PRIORITY_UPDATE frame, which is defined by :rfc:`9218`.
+        NGHTTP2_PRIORITY_UPDATE := $10
+    );
+
     {*
      * @enum
      *
