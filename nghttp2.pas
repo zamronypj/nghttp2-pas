@@ -1498,7 +1498,8 @@ type
         stream_id: int32_t;
         data: puint8_t;
         len: size_t;
-        user_data: pointer) : longint; cdecl;
+        user_data: pointer
+    ) : longint; cdecl;
 
     {*
      * @functypedef
@@ -1613,7 +1614,7 @@ type
         stream_id: int32_t;
         error_code: uint32_t;
         user_data: pointer
-    ) : longint;cdecl;
+    ) : longint; cdecl;
 
     {*
      * @functypedef
@@ -1765,13 +1766,18 @@ type
      *   of header fields or large header fields to cause out of memory in
      *   local endpoint.  Due to how HPACK works, peer can do this
      *   effectively without using much memory on their own.
-      }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
+    }
+    nghttp2_on_header_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        name: puint8_t;
+        namelen: size_t;
+        value: puint8_t;
+        valuelen: size_t;
+        flags: uint8_t;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_header_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; name:Puint8_t; namelen:size_t; value:Puint8_t;
-                   valuelen:size_t; flags:uint8_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1791,11 +1797,16 @@ type
      * the function to free memory is the one belongs to the mem
      * parameter.  As long as this free function alives, |name| and
      * |value| can live after |session| was destroyed.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_header_callback2 = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        name: pnghttp2_rcbuf;
+        value: pnghttp2_rcbuf;
+        flags:uint8_t;
+        user_data:pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_header_callback2 = function (session:Pnghttp2_session; frame:Pnghttp2_frame; name:Pnghttp2_rcbuf; value:Pnghttp2_rcbuf; flags:uint8_t;
-                   user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1828,13 +1839,18 @@ type
      *
      * If 0 is returned, the header field is ignored, and the stream is
      * not reset.
-      }
-(* Const before type ignored *)
-(* Const before type ignored *)
-(* Const before type ignored *)
+    }
+    nghttp2_on_invalid_header_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        name: puint8_t;
+        namelen: size_t;
+        value: puint8_t;
+        valuelen: size_t;
+        flags: uint8_t;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_invalid_header_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; name:Puint8_t; namelen:size_t; value:Puint8_t;
-                   valuelen:size_t; flags:uint8_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1863,12 +1879,18 @@ type
      * error code, call `nghttp2_submit_rst_stream()` with the error code
      * of choice in addition to returning
      * :enum:`nghttp2_error.NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_invalid_header_callback2 = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        name: pnghttp2_rcbuf;
+        value: pnghttp2_rcbuf;
+        flags: uint8_t;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_invalid_header_callback2 = function (session:Pnghttp2_session; frame:Pnghttp2_frame; name:Pnghttp2_rcbuf; value:Pnghttp2_rcbuf; flags:uint8_t;
-                   user_data:pointer):longint;cdecl;
 {$ifndef NGHTTP2_NO_SSIZE_T}
+type
     {*
      * @functypedef
      *
@@ -1891,14 +1913,17 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_select_padding_callback()`.
-      }
-(* Const before type ignored *)
-
-    type
-
-      nghttp2_select_padding_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; max_payloadlen:size_t; user_data:pointer):ssize_t;cdecl;
+    }
+    nghttp2_select_padding_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        max_payloadlen: size_t;
+        user_data: pointer
+    ) : ssize_t; cdecl deprecated 'Use nghttp2_select_padding_callback2 instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+type
+
     {*
      * @functypedef
      *
@@ -1916,13 +1941,16 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_select_padding_callback2()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_select_padding_callback2 = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        max_payloadlen: size_t;
+        user_data: pointer
+    ) : nghttp2_ssize; cdecl;
 
-    type
-
-      nghttp2_select_padding_callback2 = function (session:Pnghttp2_session; frame:Pnghttp2_frame; max_payloadlen:size_t; user_data:pointer):nghttp2_ssize;cdecl;
 {$ifndef NGHTTP2_NO_SSIZE_T}
+type
     {*
      * @functypedef
      *
@@ -1952,14 +1980,21 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_data_source_read_length_callback()`.
-      }
-
-    type
-
-      nghttp2_data_source_read_length_callback = function (session:Pnghttp2_session; frame_type:uint8_t; stream_id:int32_t; session_remote_window_size:int32_t; stream_remote_window_size:int32_t;
-                   remote_max_frame_size:uint32_t; user_data:pointer):ssize_t;cdecl;
+    }
+    nghttp2_data_source_read_length_callback = function (
+        session: pnghttp2_session;
+        frame_type: uint8_t;
+        stream_id: int32_t;
+        session_remote_window_size: int32_t;
+        stream_remote_window_size: int32_t;
+        remote_max_frame_size: uint32_t;
+        user_data: pointer
+    ) : ssize_t; cdecl deprecated 'Use nghttp2_data_source_read_length_callback2 instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+
+type
+
     {*
      * @functypedef
      *
@@ -1984,12 +2019,17 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_data_source_read_length_callback2()`.
-      }
+    }
+    nghttp2_data_source_read_length_callback2 = function (
+        session: pnghttp2_session;
+        frame_type: uint8_t;
+        stream_id: int32_t;
+        session_remote_window_size: int32_t;
+        stream_remote_window_size: int32_t;
+        remote_max_frame_size: uint32_t;
+        user_data: pointer
+    ) : nghttp2_ssize; cdecl;
 
-    type
-
-      nghttp2_data_source_read_length_callback2 = function (session:Pnghttp2_session; frame_type:uint8_t; stream_id:int32_t; session_remote_window_size:int32_t; stream_remote_window_size:int32_t;
-                   remote_max_frame_size:uint32_t; user_data:pointer):nghttp2_ssize;cdecl;
     {*
      * @functypedef
      *
@@ -2012,10 +2052,13 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_begin_frame_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_begin_frame_callback = function (
+        session: pnghttp2_session;
+        hd: pnghttp2_frame_hd;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_begin_frame_callback = function (session:Pnghttp2_session; hd:Pnghttp2_frame_hd; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -2035,11 +2078,15 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.  If the other
      * values are returned, currently they are treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.
-      }
-(* Const before type ignored *)
-(* Const before type ignored *)
+    }
+    nghttp2_on_extension_chunk_recv_callback = function (
+        session: pnghttp2_session;
+        hd: pnghttp2_frame_hd;
+        data: puint8_t;
+        len:size_t;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_extension_chunk_recv_callback = function (session:Pnghttp2_session; hd:Pnghttp2_frame_hd; data:Puint8_t; len:size_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -2073,11 +2120,17 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.  If the other
      * values are returned, currently they are treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_unpack_extension_callback = function (
+        session: pnghttp2_session;
+        payload: ppointer;
+        hd: pnghttp2_frame_hd;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_unpack_extension_callback = function (session:Pnghttp2_session; payload:Ppointer; hd:Pnghttp2_frame_hd; user_data:pointer):longint;cdecl;
 {$ifndef NGHTTP2_NO_SSIZE_T}
+type
+
     {*
      * @functypedef
      *
@@ -2110,14 +2163,19 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.  If the return
      * value is strictly larger than |len|, it is treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_pack_extension_callback = function (
+        session: pnghttp2_session;
+        buf: puint8_t;
+        len: size_t;
+        frame: pnghttp2_frame;
+        user_data: pointer
+    ) : ssize_t; cdecl deprecated 'Use nghttp2_pack_extension_callback2 instead';
 
-    type
-
-      nghttp2_pack_extension_callback = function (session:Pnghttp2_session; buf:Puint8_t; len:size_t; frame:Pnghttp2_frame; user_data:pointer):ssize_t;cdecl;
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+type
+
     {*
      * @functypedef
      *
@@ -2145,12 +2203,15 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.  If the return
      * value is strictly larger than |len|, it is treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_pack_extension_callback2 = function (
+        session: pnghttp2_session;
+        buf: puint8_t;
+        len: size_t;
+        frame: pnghttp2_frame;
+        user_data: pointer
+    ) : nghttp2_ssize; cdecl;
 
-    type
-
-      nghttp2_pack_extension_callback2 = function (session:Pnghttp2_session; buf:Puint8_t; len:size_t; frame:Pnghttp2_frame; user_data:pointer):nghttp2_ssize;cdecl;
     {*
      * @functypedef
      *
@@ -2176,10 +2237,14 @@ type
      * nonzero value is returned from this callback, they are treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`, but application
      * should not rely on this details.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_error_callback = function (
+        session: pnghttp2_session;
+        msg : PAnsiChar;
+        len: size_t;
+        user_data: pointer
+    ) : longint; cdecl deprecated 'Use nghttp2_error_callback2 instead';
 
-      nghttp2_error_callback = function (session:Pnghttp2_session; msg:Pchar; len:size_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -2202,29 +2267,37 @@ type
      * nonzero value is returned from this callback, they are treated as
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`, but application
      * should not rely on this details.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_error_callback2 = function (
+        session: pnghttp2_session;
+        lib_error_code: longint;
+        msg: PAnsiChar;
+        len: size_t;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_error_callback2 = function (session:Pnghttp2_session; lib_error_code:longint; msg:Pchar; len:size_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
      * Callback function invoked when unpredictable data of |destlen|
      * bytes are needed.  The implementation must write unpredictable data
      * of |destlen| bytes into the buffer pointed by |dest|.
-      }
-
-      nghttp2_rand_callback = procedure (dest:Puint8_t; destlen:size_t);cdecl;
-      nghttp2_session_callbacks = record
-          {undefined structure}
-        end;
+    }
+    nghttp2_rand_callback = procedure (dest: puint8_t; destlen: size_t); cdecl;
 
     {*
      * @struct
      *
      * Callback functions for :type:`nghttp2_session`.  The details of
      * this structure are intentionally hidden from the public API.
-      }
+    }
+    nghttp2_session_callbacks = record
+        {undefined structure}
+    end;
+    pnghttp2_session_callbacks = ^nghttp2_session_callbacks;
+    // pointer to pointer of nghttp2_session_callbacks
+    ppnghttp2_session_callbacks = ^pnghttp2_session_callbacks;
+
     {*
      * @function
      *
@@ -2241,19 +2314,17 @@ type
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 2487 *)
+    }
+    function nghttp2_session_callbacks_new(callbacks_ptr: ppnghttp2_session_callbacks): longint; cdecl; external;
+
     {*
      * @function
      *
      * Frees any resources allocated for |callbacks|.  If |callbacks| is
      * ``NULL``, this function does nothing.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2496 *)
+    }
+    procedure nghttp2_session_callbacks_del(callbacks : pnghttp2_session_callbacks);
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -2267,12 +2338,14 @@ in declaration at line 2496 *)
      * the remote peer.  This callback is not necessary if the application
      * uses solely `nghttp2_session_mem_send()` to serialize data to
      * transmit.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_callback(
-in declaration at line 2513 *)
+    }
+    procedure nghttp2_session_callbacks_set_send_callback(
+        cbs : pnghttp2_session_callbacks;
+        send_callback: nghttp2_send_callback
+    ); cdecl; external ceprecated  'Use nghttp2_session_callbacks_set_send_callback2() with nghttp2_send_callback2 instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
@@ -2280,10 +2353,11 @@ in declaration at line 2513 *)
      * the remote peer.  This callback is not necessary if the application
      * uses solely `nghttp2_session_mem_send2()` to serialize data to
      * transmit.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_callback2(
-in declaration at line 2526 *)
+    }
+    procedure nghttp2_session_callbacks_set_send_callback2(
+        cbs: pnghttp2_session_callbacks;
+        send_callback: nghttp2_send_callback2); cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -2297,12 +2371,15 @@ in declaration at line 2526 *)
      * data from the remote peer.  This callback is not necessary if the
      * application uses solely `nghttp2_session_mem_recv()` to process
      * received data.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_recv_callback(
-in declaration at line 2543 *)
+    }
+    procedure nghttp2_session_callbacks_set_recv_callback(
+        cbs: pnghttp2_session_callbacks;
+        recv_callback: nghttp2_recv_callback
+    ); cdecl; external deprecated 'Use nghttp2_session_callbacks_set_recv_callback2() with nghttp2_recv_callback2 instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+
     {*
      * @function
      *
