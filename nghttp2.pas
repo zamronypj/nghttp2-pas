@@ -1,7 +1,8 @@
 {---------------------------------------------------------------------------
 MIT License
 
-Copyright (c) 2021 - Present Zamrony P. Juhara https://github.com/zamronypj/llhttp-pas
+Copyright (c) 2021 - Present Zamrony P. Juhara
+https://github.com/zamronypj/nghttp2-pas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -75,7 +76,7 @@ const
 
     {*
      * The protocol version identification string of this library
-     * supports.  This identifier is used if HTTP/2 is used over cleartext
+     * supports. This identifier is used if HTTP/2 is used over cleartext
      * TCP.
     }
     NGHTTP2_CLEARTEXT_PROTO_VERSION_ID = 'h2c';
@@ -83,41 +84,28 @@ const
     // The length of NGHTTP2_CLEARTEXT_PROTO_VERSION_ID.
     NGHTTP2_CLEARTEXT_PROTO_VERSION_ID_LEN = 3;
 
-    // the age of :type:`nghttp2_info`
+    // the age of nghttp2_info
     NGHTTP2_VERSION_AGE = 1;
 
 type
 
-    Pnghttp2_data_source  = ^nghttp2_data_source;
-    Pnghttp2_frame  = ^nghttp2_frame;
-    Pnghttp2_frame_hd  = ^nghttp2_frame_hd;
-    Pnghttp2_rcbuf  = ^nghttp2_rcbuf;
-    Puint32_t  = ^uint32_t;
-    Puint8_t  = ^uint8_t;
-
-
     nghttp2_ssize = ptrdiff_t;
 
-   {*
-    * The primary structure to hold the resources needed for a HTTP/2
-    * session.  The details of this structure are intentionally hidden
-    * from the public API.
+    {*
+      * The primary structure to hold the resources needed for a HTTP/2
+      * session. The details of this structure are intentionally hidden
+      * from the public API.
     }
     nghttp2_session = record
+        {intentionally hidden}
     end;
-    Pnghttp2_session  = ^nghttp2_session;
+    pnghttp2_session  = ^nghttp2_session;
 
-
-
-(* Const before type ignored *)
-(* Const before type ignored *)
-  { -------- the above fields all exist when age == 1  }
-
-  {*
-   * @struct
-   *
-   * This struct is what `nghttp2_version()` returns.  It holds
-   * information about the particular nghttp2 version.
+    {*
+      * @struct
+      *
+      * This struct is what `nghttp2_version()` returns.  It holds
+      * information about the particular nghttp2 version.
     }
     nghttp2_info = record
 
@@ -139,7 +127,13 @@ type
          * instance implements (since age ==1)
         }
         proto_str : PAnsichar;
+
+        { -------- the above fields all exist when age == 1  }
+
       end;
+
+
+const
 
   {*
    * @macro
@@ -152,9 +146,8 @@ type
    *
    * The default weight of stream dependency.
     }
-
-  const
     NGHTTP2_DEFAULT_WEIGHT = 16;
+
   {*
    * @macro
    *
@@ -167,6 +160,7 @@ type
    * The maximum weight of stream dependency.
     }
     NGHTTP2_MAX_WEIGHT = 256;
+
   {*
    * @macro
    *
@@ -179,47 +173,51 @@ type
    * The minimum weight of stream dependency.
     }
     NGHTTP2_MIN_WEIGHT = 1;
+
   {*
    * @macro
    *
    * The maximum window size
     }
 
-  { was #define dname def_expr }
-  function NGHTTP2_MAX_WINDOW_SIZE : int32_t;
+  NGHTTP2_MAX_WINDOW_SIZE = uint32_t((1 shl 31) - 1);
 
   {*
    * @macro
    *
    * The initial window size for stream level flow control.
     }
-  const
     NGHTTP2_INITIAL_WINDOW_SIZE = (1 shl 16)-1;
+
   {*
    * @macro
    *
    * The initial window size for connection level flow control.
     }
     NGHTTP2_INITIAL_CONNECTION_WINDOW_SIZE = (1 shl 16)-1;
+
   {*
    * @macro
    *
    * The default header table size.
     }
     NGHTTP2_DEFAULT_HEADER_TABLE_SIZE = 1 shl 12;
+
   {*
    * @macro
    *
    * The client magic string, which is the first 24 bytes byte string of
    * client connection preface.
     }
-    NGHTTP2_CLIENT_MAGIC = 'PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n';
+    NGHTTP2_CLIENT_MAGIC = 'PRI * HTTP/2.0#13#10#13#10SM#13#10#13#10';
+
   {*
    * @macro
    *
    * The length of :macro:`NGHTTP2_CLIENT_MAGIC`.
     }
     NGHTTP2_CLIENT_MAGIC_LEN = 24;
+
   {*
    * @macro
    *
@@ -229,6 +227,7 @@ type
 
 
 type
+
     {*
     * Error codes used in this library. The code range is [-999, -500],
     * inclusive. The following values are defined:
@@ -429,26 +428,27 @@ type
     // to avoid creating duplicate strings for these buffers.
     function nghttp2_rcbuf_is_static(const rcbuf: pnghttp2_rcbuf): longint; cdecl; external;
 
+type
 
     //The flags for header field name/value pair.
     nghttp2_nv_flag = (
-      // No flag set.
-      NGHTTP2_NV_FLAG_NONE := 0,
+        // No flag set.
+        NGHTTP2_NV_FLAG_NONE := 0,
 
-      // Indicates that this name/value pair must not be indexed ("Literal
-      // Header Field never Indexed" representation must be used in HPACK
-      // encoding).  Other implementation calls this bit as "sensitive".
-      NGHTTP2_NV_FLAG_NO_INDEX := $01,
+        // Indicates that this name/value pair must not be indexed ("Literal
+        // Header Field never Indexed" representation must be used in HPACK
+        // encoding).  Other implementation calls this bit as "sensitive".
+        NGHTTP2_NV_FLAG_NO_INDEX := $01,
 
-      // This flag is set solely by application.  If this flag is set, the
-      // library does not make a copy of header field name.  This could
-      // improve performance.
-      NGHTTP2_NV_FLAG_NO_COPY_NAME := $02,
+        // This flag is set solely by application.  If this flag is set, the
+        // library does not make a copy of header field name.  This could
+        // improve performance.
+        NGHTTP2_NV_FLAG_NO_COPY_NAME := $02,
 
-      // This flag is set solely by application.  If this flag is set, the
-      // library does not make a copy of header field value.  This could
-      // improve performance.
-      NGHTTP2_NV_FLAG_NO_COPY_VALUE := $04
+        // This flag is set solely by application.  If this flag is set, the
+        // library does not make a copy of header field value.  This could
+        // improve performance.
+        NGHTTP2_NV_FLAG_NO_COPY_VALUE := $04
     );
 
     // The name/value pair, which mainly used to represent header fields.
@@ -463,7 +463,7 @@ type
         // the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_NAME`).
         // When application is constructing this struct, |name| is not
         // required to be NULL-terminated.
-        name : ^uint8_t;
+        name : puint8_t;
 
         // The |value| byte string.  If this struct is presented from
         // library (e.g., `nghttp2_on_frame_recv_callback`), |value|
@@ -475,7 +475,7 @@ type
         // the flag :enum:`nghttp2_nv_flag.NGHTTP2_NV_FLAG_NO_COPY_VALUE`).
         // When application is constructing this struct, |value| is not
         // required to be NULL-terminated.
-        value : ^uint8_t;
+        value : puint8_t;
 
         // The length of the |name|, excluding terminating NULL.
         namelen : size_t;
@@ -486,6 +486,7 @@ type
         // Bitwise OR of one or more of `nghttp2_nv_flag`.
         flags : uint8_t;
     end;
+    pnghttp2_nv = ^nghttp2_nv;
 
     // The frame types in HTTP/2 specification.
     nghttp2_frame_type = (
@@ -533,76 +534,49 @@ type
         NGHTTP2_PRIORITY_UPDATE := $10
     );
 
-    {*
-     * @enum
-     *
-     * The flags for HTTP/2 frames.  This enum defines all flags for all
-     * frames.
-      }
-    {*
-       * No flag set.
-        }
-    {*
-       * The END_STREAM flag.
-        }
-    {*
-       * The END_HEADERS flag.
-        }
-    {*
-       * The ACK flag.
-        }
-    {*
-       * The PADDED flag.
-        }
-    {*
-       * The PRIORITY flag.
-        }
+    // The flags for HTTP/2 frames. This enum defines all flags for all
+    // frames.
+    nghttp2_flag = (
+        // No flag set.
+        NGHTTP2_FLAG_NONE := 0,
 
-      nghttp2_flag = (NGHTTP2_FLAG_NONE := 0,NGHTTP2_FLAG_END_STREAM := $01,
-        NGHTTP2_FLAG_END_HEADERS := $04,NGHTTP2_FLAG_ACK := $01,
-        NGHTTP2_FLAG_PADDED := $08,NGHTTP2_FLAG_PRIORITY := $20
-        );
-    {*
-     * @enum
-     * The SETTINGS ID.
-      }
-    {*
-       * SETTINGS_HEADER_TABLE_SIZE
-        }
-    {*
-       * SETTINGS_ENABLE_PUSH
-        }
-    {*
-       * SETTINGS_MAX_CONCURRENT_STREAMS
-        }
-    {*
-       * SETTINGS_INITIAL_WINDOW_SIZE
-        }
-    {*
-       * SETTINGS_MAX_FRAME_SIZE
-        }
-    {*
-       * SETTINGS_MAX_HEADER_LIST_SIZE
-        }
-    {*
-       * SETTINGS_ENABLE_CONNECT_PROTOCOL
-       * (`RFC 8441 <https://tools.ietf.org/html/rfc8441>`_)
-        }
-    {*
-       * SETTINGS_NO_RFC7540_PRIORITIES (:rfc:`9218`)
-        }
+        // The END_STREAM flag.
+        NGHTTP2_FLAG_END_STREAM := $01,
 
-      nghttp2_settings_id = (NGHTTP2_SETTINGS_HEADER_TABLE_SIZE := $01,
+        // The END_HEADERS flag.
+        NGHTTP2_FLAG_END_HEADERS := $04,
+
+        // The ACK flag.
+        NGHTTP2_FLAG_ACK := $01,
+
+        // The PADDED flag.
+        NGHTTP2_FLAG_PADDED := $08,
+
+        // The PRIORITY flag.
+        NGHTTP2_FLAG_PRIORITY := $20
+    );
+
+
+    // The SETTINGS ID.
+    nghttp2_settings_id = (
+        NGHTTP2_SETTINGS_HEADER_TABLE_SIZE := $01,
         NGHTTP2_SETTINGS_ENABLE_PUSH := $02,
         NGHTTP2_SETTINGS_MAX_CONCURRENT_STREAMS := $03,
         NGHTTP2_SETTINGS_INITIAL_WINDOW_SIZE := $04,
         NGHTTP2_SETTINGS_MAX_FRAME_SIZE := $05,
         NGHTTP2_SETTINGS_MAX_HEADER_LIST_SIZE := $06,
+
+        // SETTINGS_ENABLE_CONNECT_PROTOCOL
+        // (`RFC 8441 <https://tools.ietf.org/html/rfc8441>`_)
         NGHTTP2_SETTINGS_ENABLE_CONNECT_PROTOCOL := $08,
+
+        // SETTINGS_NO_RFC7540_PRIORITIES (:rfc:`9218`)
         NGHTTP2_SETTINGS_NO_RFC7540_PRIORITIES := $09
-        );
-    { Note: If we add SETTINGS, update the capacity of
-       NGHTTP2_INBOUND_NUM_IV as well  }
+    );
+    { Note: If we add SETTINGS, update the capacity of NGHTTP2_INBOUND_NUM_IV as well }
+
+const
+
     {*
      * @macro
      *
@@ -621,137 +595,87 @@ type
      *   default.
       }
 
-    const
-      NGHTTP2_INITIAL_MAX_CONCURRENT_STREAMS = (1 shl 31)-1;
-    {*
-     * @enum
-     * The status codes for the RST_STREAM and GOAWAY frames.
-      }
-    {*
-       * No errors.
-        }
-    {*
-       * PROTOCOL_ERROR
-        }
-    {*
-       * INTERNAL_ERROR
-        }
-    {*
-       * FLOW_CONTROL_ERROR
-        }
-    {*
-       * SETTINGS_TIMEOUT
-        }
-    {*
-       * STREAM_CLOSED
-        }
-    {*
-       * FRAME_SIZE_ERROR
-        }
-    {*
-       * REFUSED_STREAM
-        }
-    {*
-       * CANCEL
-        }
-    {*
-       * COMPRESSION_ERROR
-        }
-    {*
-       * CONNECT_ERROR
-        }
-    {*
-       * ENHANCE_YOUR_CALM
-        }
-    {*
-       * INADEQUATE_SECURITY
-        }
-    {*
-       * HTTP_1_1_REQUIRED
-        }
+      NGHTTP2_INITIAL_MAX_CONCURRENT_STREAMS = (1 shl 31)-1 deprecated;
 
-    type
-      nghttp2_error_code = (NGHTTP2_NO_ERROR := $00,NGHTTP2_PROTOCOL_ERROR := $01,
-        NGHTTP2_INTERNAL_ERROR := $02,NGHTTP2_FLOW_CONTROL_ERROR := $03,
-        NGHTTP2_SETTINGS_TIMEOUT := $04,NGHTTP2_STREAM_CLOSED := $05,
-        NGHTTP2_FRAME_SIZE_ERROR := $06,NGHTTP2_REFUSED_STREAM := $07,
-        NGHTTP2_CANCEL := $08,NGHTTP2_COMPRESSION_ERROR := $09,
-        NGHTTP2_CONNECT_ERROR := $0A,NGHTTP2_ENHANCE_YOUR_CALM := $0B,
+
+type
+
+    // The status codes for the RST_STREAM and GOAWAY frames.
+    nghttp2_error_code = (
+        NGHTTP2_NO_ERROR := $00,
+        NGHTTP2_PROTOCOL_ERROR := $01,
+        NGHTTP2_INTERNAL_ERROR := $02,
+        NGHTTP2_FLOW_CONTROL_ERROR := $03,
+        NGHTTP2_SETTINGS_TIMEOUT := $04,
+        NGHTTP2_STREAM_CLOSED := $05,
+        NGHTTP2_FRAME_SIZE_ERROR := $06,
+        NGHTTP2_REFUSED_STREAM := $07,
+        NGHTTP2_CANCEL := $08,
+        NGHTTP2_COMPRESSION_ERROR := $09,
+        NGHTTP2_CONNECT_ERROR := $0A,
+        NGHTTP2_ENHANCE_YOUR_CALM := $0B,
         NGHTTP2_INADEQUATE_SECURITY := $0C,
-        NGHTTP2_HTTP_1_1_REQUIRED := $0D);
-    {*
-     * @struct
-     * The frame header.
-      }
-    {*
-       * The length field of this frame, excluding frame header.
-        }
-    {*
-       * The stream identifier (aka, stream ID)
-        }
-    {*
-       * The type of this frame.  See `nghttp2_frame_type`.
-        }
-    {*
-       * The flags.
-        }
-    {*
-       * Reserved bit in frame header.  Currently, this is always set to 0
-       * and application should not expect something useful in here.
-        }
+        NGHTTP2_HTTP_1_1_REQUIRED := $0D
+    );
 
-      nghttp2_frame_hd = record
-          length : size_t;
-          stream_id : int32_t;
-          _type : uint8_t;
-          flags : uint8_t;
-          reserved : uint8_t;
-        end;
-    {*
-     * @union
-     *
-     * This union represents the some kind of data source passed to
-     * :type:`nghttp2_data_source_read_callback2`.
-      }
-    {*
-       * The integer field, suitable for a file descriptor.
-        }
-    {*
-       * The pointer to an arbitrary object.
-        }
 
-      nghttp2_data_source = record
-          case longint of
-            0 : ( fd : longint );
-            1 : ( ptr : pointer );
-          end;
-    {*
-     * @enum
-     *
-     * The flags used to set in |data_flags| output parameter in
-     * :type:`nghttp2_data_source_read_callback2`.
-      }
-    {*
-       * No flag set.
-        }
-    {*
-       * Indicates EOF was sensed.
-        }
-    {*
-       * Indicates that END_STREAM flag must not be set even if
-       * NGHTTP2_DATA_FLAG_EOF is set.  Usually this flag is used to send
-       * trailer fields with `nghttp2_submit_request2()` or
-       * `nghttp2_submit_response2()`.
-        }
-    {*
-       * Indicates that application will send complete DATA frame in
-       * :type:`nghttp2_send_data_callback`.
-        }
+    // The frame header.
+    nghttp2_frame_hd = record
+        // The length field of this frame, excluding frame header.
+        length : size_t;
 
-      nghttp2_data_flag = (NGHTTP2_DATA_FLAG_NONE := 0,NGHTTP2_DATA_FLAG_EOF := $01,
+        // The stream identifier (aka, stream ID)
+        stream_id : int32_t;
+
+        // The type of this frame.  See `nghttp2_frame_type`.
+        // note that type is keyword in Pascal so need to prefix with &
+        // to be able to use it as variable name
+        &type : uint8_t;
+
+        // The flags.
+        flags : uint8_t;
+
+        // Reserved bit in frame header. Currently, this is always set to 0
+        // and application should not expect something useful in here.
+        reserved : uint8_t;
+    end;
+    pnghttp2_frame_hd  = ^nghttp2_frame_hd;
+
+
+    // This union represents the some kind of data source passed to
+    // `nghttp2_data_source_read_callback2`.
+    nghttp2_data_source = record
+        case longint of
+          // The integer field, suitable for a file descriptor.
+          0 : ( fd : longint );
+          // The pointer to an arbitrary object.
+          1 : ( ptr : pointer );
+    end;
+    nghttp2_data_source  = ^nghttp2_data_source;
+
+    //  * The flags used to set in |data_flags| output parameter in
+    //  * `nghttp2_data_source_read_callback2`.
+    nghttp2_data_flag = (
+        // No flag set.
+        NGHTTP2_DATA_FLAG_NONE := 0,
+        // Indicates EOF was sensed.
+        NGHTTP2_DATA_FLAG_EOF := $01,
+
+        // Indicates that END_STREAM flag must not be set even if
+        // NGHTTP2_DATA_FLAG_EOF is set. Usually this flag is used to send
+        // trailer fields with `nghttp2_submit_request2()` or
+        // `nghttp2_submit_response2()`.
         NGHTTP2_DATA_FLAG_NO_END_STREAM := $02,
-        NGHTTP2_DATA_FLAG_NO_COPY := $04);
+
+        // Indicates that application will send complete DATA frame in
+        // `nghttp2_send_data_callback`.
+        NGHTTP2_DATA_FLAG_NO_COPY := $04
+    );
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
+
+type
+
     {*
      * @functypedef
      *
@@ -820,13 +744,19 @@ type
      * Returning :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE` will
      * signal the entire session failure.
       }
+    nghttp2_data_source_read_callback = function (
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        buf: puint8_t;
+        length: size_t;
+        data_flags: puint32_t;
+        source: pnghttp2_data_source;
+        user_data: pointer) : ssize_t; cdecl deprecated 'Use nghttp2_data_source_read_callback2 instead';
 
-    type
-
-      nghttp2_data_source_read_callback = function (session:Pnghttp2_session; stream_id:int32_t; buf:Puint8_t; length:size_t; data_flags:Puint32_t;
-                   source:Pnghttp2_data_source; user_data:pointer):ssize_t;cdecl;
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+type
+
     {*
      * @functypedef
      *
@@ -891,11 +821,19 @@ type
      * signal the entire session failure.
       }
 
-    type
+    nghttp2_data_source_read_callback2 = function (
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        buf: puint8_t;
+        length:size_t;
+        data_flags: puint32_t;
+        source: pnghttp2_data_source;
+        user_data: pointer) : nghttp2_ssize; cdecl;
 
-      nghttp2_data_source_read_callback2 = function (session:Pnghttp2_session; stream_id:int32_t; buf:Puint8_t; length:size_t; data_flags:Puint32_t;
-                   source:Pnghttp2_data_source; user_data:pointer):nghttp2_ssize;cdecl;
 {$ifndef NGHTTP2_NO_SSIZE_T}
+
+type
+
     {*
      * @struct
      *
@@ -906,53 +844,43 @@ type
      * This struct represents the data source and the way to read a chunk
      * of data from it.
       }
-    {*
-       * The data source.
-        }
-    {*
-       * The callback function to read a chunk of data from the |source|.
-        }
+    nghttp2_data_provider = record
+        // The data source.
+        source : nghttp2_data_source;
 
-    type
-      nghttp2_data_provider = record
-          source : nghttp2_data_source;
-          read_callback : nghttp2_data_source_read_callback;
-        end;
+        // The callback function to read a chunk of data from the |source|.
+        read_callback : nghttp2_data_source_read_callback;
+    end deprecated 'Use nghttp2_data_provider2 instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+type
+
     {*
      * @struct
      *
      * This struct represents the data source and the way to read a chunk
      * of data from it.
       }
-    {*
-       * The data source.
-        }
-    {*
-       * The callback function to read a chunk of data from the |source|.
-        }
+    nghttp2_data_provider2 = record
+        // The data source.
+        source : nghttp2_data_source;
 
-    type
-      nghttp2_data_provider2 = record
-          source : nghttp2_data_source;
-          read_callback : nghttp2_data_source_read_callback2;
-        end;
-    {*
-     * @struct
-     *
-     * The DATA frame.  The received data is delivered via
-     * :type:`nghttp2_on_data_chunk_recv_callback`.
-      }
-    {*
-       * The length of the padding in this frame.  This includes PAD_HIGH
-       * and PAD_LOW.
-        }
+        // The callback function to read a chunk of data from the |source|.
+        read_callback : nghttp2_data_source_read_callback2;
+    end;
 
-      nghttp2_data = record
-          hd : nghttp2_frame_hd;
-          padlen : size_t;
-        end;
+
+    // The DATA frame. The received data is delivered via
+    // `nghttp2_on_data_chunk_recv_callback`.
+    nghttp2_data = record
+        hd : nghttp2_frame_hd;
+
+        //  * The length of the padding in this frame.  This includes PAD_HIGH
+        //  * and PAD_LOW.
+        padlen : size_t;
+    end;
+
+
     {*
      * @enum
      *
@@ -961,29 +889,27 @@ type
      * headers (e.g., trailer fields) are all called just HEADERS.  To
      * give the application the role of incoming HEADERS frame, we define
      * several categories.
-      }
-    {*
-       * The HEADERS frame is opening new stream, which is analogous to
-       * SYN_STREAM in SPDY.
-        }
-    {*
-       * The HEADERS frame is the first response headers, which is
-       * analogous to SYN_REPLY in SPDY.
-        }
-    {*
-       * The HEADERS frame is the first headers sent against reserved
-       * stream.
-        }
-    {*
-       * The HEADERS frame which does not apply for the above categories,
-       * which is analogous to HEADERS in SPDY.  If non-final response
-       * (e.g., status 1xx) is used, final response HEADERS frame will be
-       * categorized here.
-        }
+    }
+    nghttp2_headers_category = (
+        // The HEADERS frame is opening new stream, which is analogous to
+        // SYN_STREAM in SPDY.
+        NGHTTP2_HCAT_REQUEST := 0,
 
-      nghttp2_headers_category = (NGHTTP2_HCAT_REQUEST := 0,NGHTTP2_HCAT_RESPONSE := 1,
-        NGHTTP2_HCAT_PUSH_RESPONSE := 2,NGHTTP2_HCAT_HEADERS := 3
-        );
+        // The HEADERS frame is the first response headers, which is
+        // analogous to SYN_REPLY in SPDY.
+        NGHTTP2_HCAT_RESPONSE := 1,
+
+        // The HEADERS frame is the first headers sent against reserved
+        // stream.
+        NGHTTP2_HCAT_PUSH_RESPONSE := 2,
+
+        // The HEADERS frame which does not apply for the above categories,
+        // which is analogous to HEADERS in SPDY.  If non-final response
+        // (e.g., status 1xx) is used, final response HEADERS frame will be
+        // categorized here.
+        NGHTTP2_HCAT_HEADERS := 3
+    );
+
     {*
      * @struct
      *
@@ -994,62 +920,53 @@ type
      *   prioritization scheme.
      *
      * The structure to specify stream dependency.
-      }
-    {*
-       * The stream ID of the stream to depend on.  Specifying 0 makes
-       * stream not depend any other stream.
-        }
-    {*
-       * The weight of this dependency.
-        }
-    {*
-       * nonzero means exclusive dependency
-        }
+    }
+    nghttp2_priority_spec = record
+        // The stream ID of the stream to depend on. Specifying 0 makes
+        // stream not depend any other stream.
+        stream_id : int32_t;
 
-      nghttp2_priority_spec = record
-          stream_id : int32_t;
-          weight : int32_t;
-          exclusive : uint8_t;
-        end;
+        // The weight of this dependency.
+        weight : int32_t;
+
+        // nonzero means exclusive dependency
+        exclusive : uint8_t;
+    end deprecated 'RFC 7540 priorities are deprecated by RFC 9113. Consider migrating to RFC 9218 extensible prioritization scheme';
+
     {*
      * @struct
      *
      * The HEADERS frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The length of the padding in this frame.  This includes PAD_HIGH
-       * and PAD_LOW.
-        }
-    {*
-       * .. warning::
-       *
-       *   Deprecated.  :rfc:`7540` priorities are deprecated by
-       *   :rfc:`9113`.  Consider migrating to :rfc:`9218` extensible
-       *   prioritization scheme.
-       *
-       * The priority specification
-        }
-    {*
-       * The name/value pairs.
-        }
-    {*
-       * The number of name/value pairs in |nva|.
-        }
-    {*
-       * The category of this HEADERS frame.
-        }
+    }
+    nghttp2_headers = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_headers = record
-          hd : nghttp2_frame_hd;
-          padlen : size_t;
-          pri_spec : nghttp2_priority_spec;
-          nva : ^nghttp2_nv;
-          nvlen : size_t;
-          cat : nghttp2_headers_category;
-        end;
+        // The length of the padding in this frame. This includes PAD_HIGH
+        // and PAD_LOW.
+        padlen : size_t;
+
+        {*
+          * .. warning::
+          *
+          *   Deprecated.  :rfc:`7540` priorities are deprecated by
+          *   :rfc:`9113`.  Consider migrating to :rfc:`9218` extensible
+          *   prioritization scheme.
+          *
+          * The priority specification
+        }
+        pri_spec : nghttp2_priority_spec deprecated 'RFC 7540 priorities are deprecated by RFC 9113. Consider migrating to RFC 9218 extensible prioritization scheme';
+
+        // The name/value pairs.
+        nva : pnghttp2_nv;
+
+        // The number of name/value pairs in |nva|.
+        nvlen : size_t;
+
+        // The category of this HEADERS frame.
+        cat : nghttp2_headers_category;
+    end;
+
     {*
      * @struct
      *
@@ -1060,250 +977,209 @@ type
      *   prioritization scheme.
      *
      * The PRIORITY frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The priority specification.
-        }
+    }
+    nghttp2_priority = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_priority = record
-          hd : nghttp2_frame_hd;
-          pri_spec : nghttp2_priority_spec;
-        end;
+        // The priority specification.
+        pri_spec : nghttp2_priority_spec;
+    end deprecated 'RFC 7540 priorities are deprecated by RFC 9113. Consider migrating to RFC 9218 extensible prioritization scheme';
+
+
     {*
      * @struct
      *
-     * The RST_STREAM frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The error code.  See :type:`nghttp2_error_code`.
-        }
+     * The RST_STREAM frame. It has the following members:
+    }
+    nghttp2_rst_stream = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_rst_stream = record
-          hd : nghttp2_frame_hd;
-          error_code : uint32_t;
-        end;
+        // The error code.  See `nghttp2_error_code`.
+        error_code : uint32_t;
+    end;
+
     {*
      * @struct
      *
      * The SETTINGS ID/Value pair.  It has the following members:
-      }
-    {*
-       * The SETTINGS ID.  See :type:`nghttp2_settings_id`.
-        }
-    {*
-       * The value of this entry.
-        }
+    }
+    nghttp2_settings_entry = record
+        // The SETTINGS ID.  See `nghttp2_settings_id`.
+        settings_id : int32_t;
 
-      nghttp2_settings_entry = record
-          settings_id : int32_t;
-          value : uint32_t;
-        end;
+        // The value of this entry.
+        value : uint32_t;
+    end;
+    pnghttp2_settings_entry = ^nghttp2_settings_entry;
+
     {*
      * @struct
      *
      * The SETTINGS frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The number of SETTINGS ID/Value pairs in |iv|.
-        }
-    {*
-       * The pointer to the array of SETTINGS ID/Value pair.
-        }
+    }
+    nghttp2_settings = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_settings = record
-          hd : nghttp2_frame_hd;
-          niv : size_t;
-          iv : ^nghttp2_settings_entry;
-        end;
+        // The number of SETTINGS ID/Value pairs in |iv|.
+        niv : size_t;
+
+        // The pointer to the array of SETTINGS ID/Value pair.
+        iv : pnghttp2_settings_entry;
+    end;
+
     {*
      * @struct
      *
      * The PUSH_PROMISE frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The length of the padding in this frame.  This includes PAD_HIGH
-       * and PAD_LOW.
-        }
-    {*
-       * The name/value pairs.
-        }
-    {*
-       * The number of name/value pairs in |nva|.
-        }
-    {*
-       * The promised stream ID
-        }
-    {*
-       * Reserved bit.  Currently this is always set to 0 and application
-       * should not expect something useful in here.
-        }
+    }
+    nghttp2_push_promise = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_push_promise = record
-          hd : nghttp2_frame_hd;
-          padlen : size_t;
-          nva : ^nghttp2_nv;
-          nvlen : size_t;
-          promised_stream_id : int32_t;
-          reserved : uint8_t;
-        end;
+        // The length of the padding in this frame. This includes PAD_HIGH
+        // and PAD_LOW.
+        padlen : size_t;
+
+        // The name/value pairs.
+        nva : pnghttp2_nv;
+
+        // The number of name/value pairs in |nva|.
+        nvlen : size_t;
+
+        // The promised stream ID
+        promised_stream_id : int32_t;
+
+        // Reserved bit. Currently this is always set to 0 and application
+        // should not expect something useful in here.
+        reserved : uint8_t;
+    end;
+
     {*
      * @struct
      *
-     * The PING frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The opaque data
-        }
+     * The PING frame. It has the following members:
+    }
+    nghttp2_ping = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_ping = record
-          hd : nghttp2_frame_hd;
-          opaque_data : array[0..7] of uint8_t;
-        end;
+        //The opaque data
+        opaque_data : array[0..7] of uint8_t;
+    end;
+
     {*
      * @struct
      *
-     * The GOAWAY frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The last stream stream ID.
-        }
-    {*
-       * The error code.  See :type:`nghttp2_error_code`.
-        }
-    {*
-       * The additional debug data
-        }
-    {*
-       * The length of |opaque_data| member.
-        }
-    {*
-       * Reserved bit.  Currently this is always set to 0 and application
-       * should not expect something useful in here.
-        }
+     * The GOAWAY frame. It has the following members:
+    }
+    nghttp2_goaway = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_goaway = record
-          hd : nghttp2_frame_hd;
-          last_stream_id : int32_t;
-          error_code : uint32_t;
-          opaque_data : ^uint8_t;
-          opaque_data_len : size_t;
-          reserved : uint8_t;
-        end;
+        // The last stream stream ID.
+        last_stream_id : int32_t;
+
+        // The error code.  See nghttp2_error_code.
+        error_code : uint32_t;
+
+        // The additional debug data
+        opaque_data : puint8_t;
+
+        // The length of |opaque_data| member.
+        opaque_data_len : size_t;
+
+        // Reserved bit. Currently this is always set to 0 and application
+        // should not expect something useful in here.
+        reserved : uint8_t;
+    end;
+
+
     {*
      * @struct
      *
      * The WINDOW_UPDATE frame.  It has the following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The window size increment.
-        }
-    {*
-       * Reserved bit.  Currently this is always set to 0 and application
-       * should not expect something useful in here.
-        }
+    }
+    nghttp2_window_update = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_window_update = record
-          hd : nghttp2_frame_hd;
-          window_size_increment : int32_t;
-          reserved : uint8_t;
-        end;
+        window_size_increment : int32_t;
+
+        // Reserved bit. Currently this is always set to 0 and application
+        // should not expect something useful in here.
+        reserved : uint8_t;
+    end;
+
+
     {*
      * @struct
      *
-     * The extension frame.  It has following members:
-      }
-    {*
-       * The frame header.
-        }
-    {*
-       * The pointer to extension payload.  The exact pointer type is
-       * determined by hd.type.
-       *
-       * Currently, no extension is supported.  This is a place holder for
-       * the future extensions.
-        }
+     * The extension frame. It has following members:
+    }
+    nghttp2_extension = record
+        // The frame header.
+        hd : nghttp2_frame_hd;
 
-      nghttp2_extension = record
-          hd : nghttp2_frame_hd;
-          payload : pointer;
-        end;
+        {*
+          * The pointer to extension payload.  The exact pointer type is
+          * determined by hd.type.
+          *
+          * Currently, no extension is supported.  This is a place holder for
+          * the future extensions.
+        }
+        payload : pointer;
+    end;
+
     {*
      * @union
      *
      * This union includes all frames to pass them to various function
      * calls as nghttp2_frame type.  The CONTINUATION frame is omitted
      * from here because the library deals with it internally.
-      }
-    {*
-       * The frame header, which is convenient to inspect frame header.
-        }
-    {*
-       * The DATA frame.
-        }
-    {*
-       * The HEADERS frame.
-        }
-    {*
-       * The PRIORITY frame.
-        }
-    {*
-       * The RST_STREAM frame.
-        }
-    {*
-       * The SETTINGS frame.
-        }
-    {*
-       * The PUSH_PROMISE frame.
-        }
-    {*
-       * The PING frame.
-        }
-    {*
-       * The GOAWAY frame.
-        }
-    {*
-       * The WINDOW_UPDATE frame.
-        }
-    {*
-       * The extension frame.
-        }
-
-      nghttp2_frame = record
-          case longint of
+    }
+    nghttp2_frame = record
+        case longint of
+            // The frame header, which is convenient to inspect frame header.
             0 : ( hd : nghttp2_frame_hd );
+
+            // The DATA frame.
             1 : ( data : nghttp2_data );
+
+            // The HEADERS frame.
             2 : ( headers : nghttp2_headers );
+
+            // The PRIORITY frame.
             3 : ( priority : nghttp2_priority );
+
+            // The RST_STREAM frame.
             4 : ( rst_stream : nghttp2_rst_stream );
+
+            // The SETTINGS frame.
             5 : ( settings : nghttp2_settings );
+
+            // The PUSH_PROMISE frame.
             6 : ( push_promise : nghttp2_push_promise );
+
+            // The PING frame.
             7 : ( ping : nghttp2_ping );
+
+            // The GOAWAY frame.
             8 : ( goaway : nghttp2_goaway );
+
+            // The WINDOW_UPDATE frame.
             9 : ( window_update : nghttp2_window_update );
+
+            // The extension frame.
             10 : ( ext : nghttp2_extension );
-          end;
+    end;
+    pnghttp2_frame  = ^nghttp2_frame;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
+type
+
     {*
      * @functypedef
      *
@@ -1338,14 +1214,19 @@ type
      *   and it is very inefficient.  An application should be responsible
      *   to buffer up small chunks of data as necessary to avoid this
      *   situation.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_send_callback = function (
+        session: pnghttp2_session;
+        data: puint8_t;
+        length: size_t;
+        flags: longint;
+        user_data: pointer
+    ) : ssize_t; cdecl deprecated 'Use nghttp2_send_callback2 instead';
 
-    type
-
-      nghttp2_send_callback = function (session:Pnghttp2_session; data:Puint8_t; length:size_t; flags:longint; user_data:pointer):ssize_t;cdecl;
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+
+type
     {*
      * @functypedef
      *
@@ -1376,12 +1257,15 @@ type
      *   and it is very inefficient.  An application should be responsible
      *   to buffer up small chunks of data as necessary to avoid this
      *   situation.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_send_callback2 = function (
+        session: pnghttp2_session;
+        data: puint8_t;
+        length: size_t;
+        flags:longint;
+        user_data: pointer
+    ) : nghttp2_ssize; cdecl;
 
-    type
-
-      nghttp2_send_callback2 = function (session:Pnghttp2_session; data:Puint8_t; length:size_t; flags:longint; user_data:pointer):nghttp2_ssize;cdecl;
     {*
      * @functypedef
      *
@@ -1422,12 +1306,18 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`, which will
      * result in connection closure.  Returning any other value is treated
      * as :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE` is returned.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_send_data_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        framehd: puint8_t;
+        length: size_t;
+        source: pnghttp2_data_source;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_send_data_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; framehd:Puint8_t; length:size_t; source:Pnghttp2_data_source;
-                   user_data:pointer):longint;cdecl;
 {$ifndef NGHTTP2_NO_SSIZE_T}
+type
     {*
      * @functypedef
      *
@@ -1457,13 +1347,19 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_recv_callback()`.
-      }
+    }
+    nghttp2_recv_callback = function (
+        session: pnghttp2_session;
+        buf: puint8_t;
+        length: size_t;
+        flags: longint;
+        user_data: pointer
+    ) : ssize_t; cdecl deprecated 'Use nghttp2_recv_callback2 instead';
 
-    type
-
-      nghttp2_recv_callback = function (session:Pnghttp2_session; buf:Puint8_t; length:size_t; flags:longint; user_data:pointer):ssize_t;cdecl;
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
+type
+
     {*
      * @functypedef
      *
@@ -1489,11 +1385,15 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_recv_callback2()`.
-      }
+    }
+    nghttp2_recv_callback2 = function (
+        session: pnghttp2_session;
+        buf: puint8_t;
+        length:size_t;
+        flags:longint;
+        user_data: pointer
+    ) : nghttp2_ssize; cdecl;
 
-    type
-
-      nghttp2_recv_callback2 = function (session:Pnghttp2_session; buf:Puint8_t; length:size_t; flags:longint; user_data:pointer):nghttp2_ssize;cdecl;
     {*
      * @functypedef
      *
@@ -1522,10 +1422,13 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_frame_recv_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_frame_recv_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        user_data:pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_frame_recv_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1550,10 +1453,14 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_invalid_frame_recv_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_invalid_frame_recv_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        lib_error_code: longint;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_invalid_frame_recv_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; lib_error_code:longint; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1584,11 +1491,15 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_data_chunk_recv_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_data_chunk_recv_callback = function (
+        session: pnghttp2_session;
+        flags: uint8_t;
+        stream_id: int32_t;
+        data: puint8_t;
+        len: size_t;
+        user_data: pointer) : longint; cdecl;
 
-      nghttp2_on_data_chunk_recv_callback = function (session:Pnghttp2_session; flags:uint8_t; stream_id:int32_t; data:Puint8_t; len:size_t;
-                   user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1615,10 +1526,13 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_before_frame_send_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_before_frame_send_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_before_frame_send_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1634,10 +1548,13 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_frame_send_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_frame_send_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_frame_send_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1659,10 +1576,14 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_frame_not_send_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_frame_not_send_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        lib_error_code: longint;
+        user_data:pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_frame_not_send_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; lib_error_code:longint; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1686,9 +1607,14 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_stream_close_callback()`.
-      }
+    }
+    nghttp2_on_stream_close_callback = function (
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        error_code: uint32_t;
+        user_data: pointer
+    ) : longint;cdecl;
 
-      nghttp2_on_stream_close_callback = function (session:Pnghttp2_session; stream_id:int32_t; error_code:uint32_t; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
@@ -1752,10 +1678,13 @@ type
      *
      * To set this callback to :type:`nghttp2_session_callbacks`, use
      * `nghttp2_session_callbacks_set_on_begin_headers_callback()`.
-      }
-(* Const before type ignored *)
+    }
+    nghttp2_on_begin_headers_callback = function (
+        session: pnghttp2_session;
+        frame: pnghttp2_frame;
+        user_data: pointer
+    ) : longint; cdecl;
 
-      nghttp2_on_begin_headers_callback = function (session:Pnghttp2_session; frame:Pnghttp2_frame; user_data:pointer):longint;cdecl;
     {*
      * @functypedef
      *
