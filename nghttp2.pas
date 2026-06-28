@@ -2627,39 +2627,46 @@ type
      *
      * Sets callback function invoked when the library asks the
      * application to pack extension frame payload in wire format.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_pack_extension_callback(
-in declaration at line 2780 *)
+    }
+    procedure nghttp2_session_callbacks_set_pack_extension_callback(
+        cbs: pnghttp2_session_callbacks;
+        pack_extension_callback: nghttp2_pack_extension_callback
+    ); cdecl; external deprecated 'Use nghttp2_session_callbacks_set_pack_extension_callback2() with nghttp2_pack_extension_callback2 instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
      * Sets callback function invoked when the library asks the
      * application to pack extension frame payload in wire format.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_pack_extension_callback2(
-in declaration at line 2792 *)
+    }
+    procedure nghttp2_session_callbacks_set_pack_extension_callback2(
+        cbs: pnghttp2_session_callbacks;
+        pack_extension_callback: nghttp2_pack_extension_callback2
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when the library asks the
      * application to unpack extension frame payload from wire format.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_unpack_extension_callback(
-in declaration at line 2802 *)
+    }
+    procedure nghttp2_session_callbacks_set_unpack_extension_callback(
+        cbs: pnghttp2_session_callbacks;
+        unpack_extension_callback: nghttp2_unpack_extension_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when chunk of extension frame
      * payload is received.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2813 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_extension_chunk_recv_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_extension_chunk_recv_callback: nghttp2_on_extension_chunk_recv_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2675,10 +2682,12 @@ in declaration at line 2813 *)
      * If both :type:`nghttp2_error_callback` and
      * :type:`nghttp2_error_callback2` are set, the latter takes
      * precedence.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_error_callback(
-in declaration at line 2832 *)
+    }
+    procedure nghttp2_session_callbacks_set_error_callback(
+        cbs: pnghttp2_session_callbacks;
+        error_callback: nghttp2_error_callback
+    ); cdecl; external deprecated 'Use nghttp2_session_callbacks_set_error_callback2() with nghttp2_error_callback2 instead';
+
     {*
      * @function
      *
@@ -2688,10 +2697,12 @@ in declaration at line 2832 *)
      * If both :type:`nghttp2_error_callback` and
      * :type:`nghttp2_error_callback2` are set, the latter takes
      * precedence.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_error_callback2(
-in declaration at line 2845 *)
+    }
+    procedure nghttp2_session_callbacks_set_error_callback2(
+        cbs: pnghttp2_session_callbacks;
+        error_callback2: nghttp2_error_callback2
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2700,43 +2711,57 @@ in declaration at line 2845 *)
      * compatibility, it is recommended to specify it to harden the
      * runtime behavior against suspicious activities of a remote
      * endpoint.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_rand_callback(
-in declaration at line 2857 *)
+    }
+    procedure nghttp2_session_callbacks_set_rand_callback(
+        cbs: pnghttp2_session_callbacks;
+        rand_callback: nghttp2_rand_callback
+    ); cdecl; external;
+
+type
+
     {*
      * @functypedef
      *
      * Custom memory allocator to replace malloc().  The |mem_user_data|
      * is the mem_user_data member of :type:`nghttp2_mem` structure.
-      }
+    }
+    nghttp2_malloc = function (
+        size: size_t;
+        mem_user_data: pointer
+    ) : pointer;cdecl;
 
-    type
-      nghttp2_malloc = function (size:size_t; mem_user_data:pointer):pointer;cdecl;
     {*
      * @functypedef
      *
      * Custom memory allocator to replace free().  The |mem_user_data| is
      * the mem_user_data member of :type:`nghttp2_mem` structure.
-      }
+    }
+    nghttp2_free = procedure (ptr: pointer; mem_user_data: pointer); cdecl;
 
-      nghttp2_free = procedure (ptr:pointer; mem_user_data:pointer);cdecl;
     {*
      * @functypedef
      *
      * Custom memory allocator to replace calloc().  The |mem_user_data|
      * is the mem_user_data member of :type:`nghttp2_mem` structure.
-      }
+    }
+    nghttp2_calloc = function (
+        nmemb: size_t;
+        size: size_t;
+        mem_user_data: pointer
+    ) : pointer; cdecl;
 
-      nghttp2_calloc = function (nmemb:size_t; size:size_t; mem_user_data:pointer):pointer;cdecl;
     {*
      * @functypedef
      *
      * Custom memory allocator to replace realloc().  The |mem_user_data|
      * is the mem_user_data member of :type:`nghttp2_mem` structure.
-      }
+    }
+    nghttp2_realloc = function (
+        ptr: pointer;
+        size: size_t;
+        mem_user_data: pointer
+    ) : pointer; cdecl;
 
-      nghttp2_realloc = function (ptr:pointer; size:size_t; mem_user_data:pointer):pointer;cdecl;
     {*
      * @struct
      *
@@ -2775,41 +2800,38 @@ in declaration at line 2857 *)
      *
      *       ...
      *
-      }
-    {*
-       * An arbitrary user supplied data.  This is passed to each
-       * allocator function.
-        }
-    {*
-       * Custom allocator function to replace malloc().
-        }
-    {*
-       * Custom allocator function to replace free().
-        }
-    {*
-       * Custom allocator function to replace calloc().
-        }
-    {*
-       * Custom allocator function to replace realloc().
-        }
+    }
+    nghttp2_mem = record
+        // An arbitrary user supplied data.  This is passed to each
+        // allocator function.
+        mem_user_data : pointer;
 
-      nghttp2_mem = record
-          mem_user_data : pointer;
-          malloc : nghttp2_malloc;
-          free : nghttp2_free;
-          calloc : nghttp2_calloc;
-          realloc : nghttp2_realloc;
-        end;
-      nghttp2_option = record
-          {undefined structure}
-        end;
+        // Custom allocator function to replace malloc().
+        malloc : nghttp2_malloc;
+
+        // Custom allocator function to replace free().
+        free : nghttp2_free;
+
+        // Custom allocator function to replace calloc().
+        calloc : nghttp2_calloc;
+
+        // Custom allocator function to replace realloc().
+        realloc : nghttp2_realloc;
+    end;
 
     {*
      * @struct
      *
      * Configuration options for :type:`nghttp2_session`.  The details of
      * this structure are intentionally hidden from the public API.
-      }
+    }
+    nghttp2_option = record
+          {undefined structure}
+    end;
+    pnghttp2_option = ^nghttp2_option;
+    // pointer to pointer of nghttp2_option
+    ppnghttp2_option = ^pnghttp2_option;
+
     {*
      * @function
      *
@@ -2823,19 +2845,17 @@ in declaration at line 2857 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_option_new(nghttp2_option **option_ptr);
-in declaration at line 2978 *)
+    }
+    function nghttp2_option_new(option_ptr: ppnghttp2_option): longint; cdecl; external;
+
     {*
      * @function
      *
      * Frees any resources allocated for |option|.  If |option| is
      * ``NULL``, this function does nothing.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_del(nghttp2_option *option);
-in declaration at line 2986 *)
+    }
+    procedure nghttp2_option_del(option: pnghttp2_option); cdecl; external;
+
     {*
      * @function
      *
@@ -2845,10 +2865,12 @@ in declaration at line 2986 *)
      * `nghttp2_session_consume()` to indicate the consumed amount of
      * data.  Don't use `nghttp2_submit_window_update()` for this purpose.
      * By default, this option is set to zero.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2999 *)
+    }
+    procedure nghttp2_option_set_no_auto_window_update(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2863,10 +2885,12 @@ in declaration at line 2999 *)
      * initial SETTINGS frame from the remote endpoint, either to the
      * value advertised in SETTINGS_MAX_CONCURRENT_STREAMS or to the
      * default value (unlimited) if none was advertised.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3018 *)
+    }
+    procedure nghttp2_option_set_peer_max_concurrent_streams(
+        option: pnghttp2_option;
+        val: uint32_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2885,10 +2909,12 @@ in declaration at line 3018 *)
      * and `nghttp2_session_mem_recv2()` will return error
      * :enum:`nghttp2_error.NGHTTP2_ERR_BAD_CLIENT_MAGIC`, which is fatal
      * error.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3040 *)
+    }
+    procedure nghttp2_option_set_no_recv_client_magic(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2901,10 +2927,12 @@ in declaration at line 3040 *)
      * does not change the fundamental client and server model of HTTP.
      * That is, even if the validation is disabled, only client can send
      * requests.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_no_http_messaging(nghttp2_option *option,
-in declaration at line 3056 *)
+    }
+    procedure nghttp2_option_set_no_http_messaging(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2919,10 +2947,12 @@ in declaration at line 3056 *)
      * callback, if they exceed the given limit.  The default value is
      * 200.  If session is configured as server side, this option has no
      * effect.  Server can control the number of streams to push.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3075 *)
+    }
+    procedure nghttp2_option_set_max_reserved_remote_streams(
+        option: pnghttp2_option;
+        val: uint32_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2935,10 +2965,12 @@ in declaration at line 3075 *)
      * this function multiple times to set more than one frame type to
      * receive.  The application does not have to call this function if it
      * just sends extension frames.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3092 *)
+    }
+    procedure nghttp2_option_set_user_recv_extension_type(
+        option: pnghttp2_option;
+        val: uint8_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2954,10 +2986,12 @@ in declaration at line 3092 *)
      * `nghttp2_option_set_builtin_recv_extension_type()` and
      * `nghttp2_option_set_user_recv_extension_type()`, the latter takes
      * precedence.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3112 *)
+    }
+    procedure nghttp2_option_set_builtin_recv_extension_type(
+        option: pnghttp2_option;
+        val: uint8_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2968,10 +3002,12 @@ in declaration at line 3112 *)
      * frame.  The application can send PING frame with ACK flag set using
      * `nghttp2_submit_ping()` with :enum:`nghttp2_flag.NGHTTP2_FLAG_ACK`
      * as flags parameter.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_no_auto_ping_ack(nghttp2_option *option,
-in declaration at line 3126 *)
+    }
+    procedure nghttp2_option_set_no_auto_ping_ack(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2982,10 +3018,12 @@ in declaration at line 3126 *)
      * application attempts to send header fields larger than this limit,
      * the transmission of the frame fails with error code
      * :enum:`nghttp2_error.NGHTTP2_ERR_FRAME_SIZE_ERROR`.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3141 *)
+    }
+    procedure nghttp2_option_set_max_send_header_block_length(
+        option: pnghttp2_option;
+        val: size_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2994,10 +3032,12 @@ in declaration at line 3141 *)
      * deflated header block can specify maximum dynamic table size.  The
      * actual maximum size is the minimum of the size receiver specified
      * and this option value.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3154 *)
+    }
+    procedure nghttp2_option_set_max_deflate_dynamic_table_size(
+        option: pnghttp2_option;
+        val: size_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3007,10 +3047,12 @@ in declaration at line 3154 *)
      *
      * This function works as before, but it does not take any effect
      * against :type:`nghttp2_session`.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_no_closed_streams(nghttp2_option *option,
-in declaration at line 3167 *)
+    }
+    procedure nghttp2_option_set_no_closed_streams(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external deprecated 'Closed streams are not retained anymore';
+
     {*
      * @function
      *
@@ -3018,10 +3060,12 @@ in declaration at line 3167 *)
      * PING ACK frames retained in :type:`nghttp2_session` object.  If
      * more than those frames are retained, the peer is considered to be
      * misbehaving and session will be closed.  The default value is 1000.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_max_outbound_ack(nghttp2_option *option,
-in declaration at line 3178 *)
+    }
+    procedure nghttp2_option_set_max_outbound_ack(
+        option: pnghttp2_option;
+        val: size_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3029,10 +3073,12 @@ in declaration at line 3178 *)
      * SETTINGS frame that will be accepted. If more than those entries
      * are received, the peer is considered to be misbehaving and session
      * will be closed. The default value is 32.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_max_settings(nghttp2_option *option,
-in declaration at line 3189 *)
+    }
+    procedure nghttp2_option_set_max_settings(
+        option: pnghttp2_option;
+        val: size_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3041,10 +3087,12 @@ in declaration at line 3189 *)
      *
      * This function works as before, but it does not take any effect
      * against :type:`nghttp2_session`.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3202 *)
+    }
+    procedure nghttp2_option_set_server_fallback_rfc7540_priorities(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external deprecated 'RFC 7540 priorities have been removed';
+
     {*
      * @function
      *
@@ -3052,10 +3100,12 @@ in declaration at line 3202 *)
      * trailing white spaces validation against HTTP field value.  Some
      * important fields, such as HTTP/2 pseudo header fields, are
      * validated more strictly and this option does not apply to them.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3214 *)
+    }
+    procedure nghttp2_option_set_no_rfc9113_leading_and_trailing_ws_validation(
+        option: pnghttp2_option;
+        val: longint
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3068,10 +3118,13 @@ in declaration at line 3214 *)
      * If there is no token available, GOAWAY is sent to tear down the
      * connection.  |burst| and |rate| default to 1000 and 33
      * respectively.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 3231 *)
+    }
+    procedure nghttp2_option_set_stream_reset_rate_limit(
+        option: pnghttp2_option;
+        burst: uint64_t;
+        rate: uint64_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3079,10 +3132,12 @@ in declaration at line 3231 *)
      * following an incoming HEADER frame.  If more than those frames are
      * received, the remote endpoint is considered to be misbehaving and
      * session will be closed.  The default value is 8.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_max_continuations(nghttp2_option *option,
-in declaration at line 3242 *)
+    }
+    procedure nghttp2_option_set_max_continuations(
+        option: pnghttp2_option;
+        val: size_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3095,10 +3150,13 @@ in declaration at line 3242 *)
      * some amount of tokens are consumed.  If there is no token
      * available, GOAWAY is sent to tear down the connection.  |burst| and
      * |rate| default to 10000 and 330 respectively.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_option_set_glitch_rate_limit(nghttp2_option *option,
-in declaration at line 3259 *)
+    }
+    procedure nghttp2_option_set_glitch_rate_limit(
+        option: pnghttp2_option;
+        burst: uint64_t;
+        rate: uint64_t
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -3119,10 +3177,13 @@ in declaration at line 3259 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3285 *)
+    }
+    function nghttp2_session_client_new(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3143,10 +3204,13 @@ in declaration at line 3285 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3311 *)
+    }
+    function nghttp2_session_server_new(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3167,10 +3231,14 @@ in declaration at line 3311 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3337 *)
+    }
+    function nghttp2_session_client_new2(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer;
+        constref option: pnghttp2_option
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3191,10 +3259,14 @@ in declaration at line 3337 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3363 *)
+    }
+    function nghttp2_session_server_new2(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer;
+        constref option: pnghttp2_option
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3215,10 +3287,15 @@ in declaration at line 3363 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_client_new3(
-in declaration at line 3388 *)
+    }
+    function nghttp2_session_client_new3(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer;
+        constref option: pnghttp2_option;
+        mem: pnghttp2_mem
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3239,19 +3316,23 @@ in declaration at line 3388 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_server_new3(
-in declaration at line 3413 *)
+    }
+    function nghttp2_session_server_new3(
+        session_ptr: ppnghttp2_session;
+        constref callbacks: pnghttp2_session_callbacks;
+        user_data: pointer;
+        constref option: pnghttp2_option;
+        mem: pnghttp2_mem
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Frees any resources allocated for |session|.  If |session| is
      * ``NULL``, this function does nothing.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_del(nghttp2_session *session);
-in declaration at line 3421 *)
+    }
+    procedure nghttp2_session_del(session: pnghttp2_session); cdecl; external;
+
     {*
      * @function
      *
@@ -3306,10 +3387,11 @@ in declaration at line 3421 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`
      *     The callback function failed.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_send(nghttp2_session *session);
-in declaration at line 3478 *)
+    }
+    function nghttp2_session_send(
+        session: pnghttp2_session
+    ): longint; cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
