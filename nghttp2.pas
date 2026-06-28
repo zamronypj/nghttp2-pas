@@ -3435,15 +3435,14 @@ type
      *   is very inefficient.  An application should be responsible to
      *   buffer up small chunks of data as necessary to avoid this
      *   situation.
-      }
-(* error
-NGHTTP2_EXTERN ssize_t nghttp2_session_mem_send(nghttp2_session *session,
-(* error
-                                                const uint8_t **data_ptr);
- in declarator_list *)
- in declarator_list *)
-{$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+    }
+    function nghttp2_session_mem_send(
+        session: pnghttp2_session;
+        constref data_ptr ppuint8_t
+    ): ssize_t; cdecl; external deprecated 'Use nghttp2_session_mem_send2() instead';
+
+{$endif
+}
     {*
      * @function
      *
@@ -3482,13 +3481,12 @@ NGHTTP2_EXTERN ssize_t nghttp2_session_mem_send(nghttp2_session *session,
      *   is very inefficient.  An application should be responsible to
      *   buffer up small chunks of data as necessary to avoid this
      *   situation.
-      }
-(* error
-nghttp2_session_mem_send2(nghttp2_session *session, const uint8_t **data_ptr);
-(* error
-nghttp2_session_mem_send2(nghttp2_session *session, const uint8_t **data_ptr);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_mem_send2(
+        session: pnghttp2_session;
+        constref data_ptr: ppuint8_t
+    ): nghttp2_ssize; cdecl; external;
+
     {*
      * @function
      *
@@ -3556,10 +3554,9 @@ nghttp2_session_mem_send2(nghttp2_session *session, const uint8_t **data_ptr);
      * :enum:`nghttp2_error.NGHTTP2_ERR_FLOODED`
      *     Flooding was detected in this HTTP/2 session, and it must be
      *     closed.  This is most likely caused by misbehaviour of peer.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_recv(nghttp2_session *session);
-in declaration at line 3639 *)
+    }
+    function nghttp2_session_recv(session: pnghttp2_session): longint; cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
