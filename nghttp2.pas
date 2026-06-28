@@ -3598,18 +3598,15 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_FLOODED`
      *     Flooding was detected in this HTTP/2 session, and it must be
      *     closed.  This is most likely caused by misbehaviour of peer.
-      }
-(* error
-NGHTTP2_EXTERN ssize_t nghttp2_session_mem_recv(nghttp2_session *session,
-(* error
-                                                const uint8_t *in,
-(* error
-                                                size_t inlen);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_mem_recv(
+        session: pnghttp2_session;
+        constref _in: puint8_t;
+        inlen: size_t
+    ): ssize_t; cdecl; external deprecated 'Use nghttp2_session_mem_recv2() instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
