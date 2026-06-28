@@ -2387,80 +2387,98 @@ type
      * data from the remote peer.  This callback is not necessary if the
      * application uses solely `nghttp2_session_mem_recv2()` to process
      * received data.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_recv_callback2(
-in declaration at line 2556 *)
+    }
+    procedure nghttp2_session_callbacks_set_recv_callback2(
+        cbs: pnghttp2_session_callbacks;
+        recv_callback: nghttp2_recv_callback2
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked by `nghttp2_session_recv()` and
      * `nghttp2_session_mem_recv2()` when a frame is received.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_recv_callback(
-in declaration at line 2566 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_frame_recv_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_frame_recv_callback: nghttp2_on_frame_recv_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked by `nghttp2_session_recv()` and
      * `nghttp2_session_mem_recv2()` when an invalid non-DATA frame is
      * received.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2578 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_invalid_frame_recv_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_invalid_frame_recv_callback: nghttp2_on_invalid_frame_recv_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when a chunk of data in DATA frame
      * is received.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_data_chunk_recv_callback(
-in declaration at line 2588 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_data_chunk_recv_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_data_chunk_recv_callback: nghttp2_on_data_chunk_recv_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked before a non-DATA frame is sent.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_before_frame_send_callback(
-in declaration at line 2597 *)
+    }
+    procedure nghttp2_session_callbacks_set_before_frame_send_callback(
+        cbs: pnghttp2_session_callbacks;
+        before_frame_send_callback: nghttp2_before_frame_send_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked after a frame is sent.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_send_callback(
-in declaration at line 2606 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_frame_send_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_frame_send_callback: nghttp2_on_frame_send_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when a non-DATA frame is not sent
      * because of an error.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_not_send_callback(
-in declaration at line 2616 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_frame_not_send_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_frame_not_send_callback: nghttp2_on_frame_not_send_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when the stream is closed.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_stream_close_callback(
-in declaration at line 2625 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_stream_close_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_stream_close_callback: nghttp2_on_stream_close_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when the reception of header block
      * in HEADERS or PUSH_PROMISE is started.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_headers_callback(
-in declaration at line 2635 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_begin_headers_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_begin_headers_callback: nghttp2_on_begin_headers_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2469,19 +2487,23 @@ in declaration at line 2635 *)
      * `nghttp2_session_callbacks_set_on_header_callback()` and
      * `nghttp2_session_callbacks_set_on_header_callback2()` are used to
      * set callbacks, the latter has the precedence.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback(
-in declaration at line 2648 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_header_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_header_callback: nghttp2_on_header_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when a header name/value pair is
      * received.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback2(
-in declaration at line 2658 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_header_callback2(
+        cbs: pnghttp2_session_callbacks,
+        on_header_callback2: nghttp2_on_header_callback2
+    ); cdecl; external;
+
     {*
      * @function
      *
@@ -2490,19 +2512,23 @@ in declaration at line 2658 *)
      * `nghttp2_session_callbacks_set_on_invalid_header_callback()` and
      * `nghttp2_session_callbacks_set_on_invalid_header_callback2()` are
      * used to set callbacks, the latter takes the precedence.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback(
-in declaration at line 2671 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_invalid_header_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_invalid_header_callback: nghttp2_on_invalid_header_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when an invalid header name/value
      * pair is received.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback2(
-in declaration at line 2681 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_invalid_header_callback2(
+        cbs: pnghttp2_session_callbacks;
+        on_invalid_header_callback2: nghttp2_on_invalid_header_callback2
+    ); cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -2516,22 +2542,26 @@ in declaration at line 2681 *)
      * Sets callback function invoked when the library asks application
      * how many padding bytes are required for the transmission of the
      * given frame.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_select_padding_callback(
-in declaration at line 2699 *)
+    }
+    procedure nghttp2_session_callbacks_set_select_padding_callback(
+        cbs: pnghttp2_session_callbacks;
+        select_padding_callback: nghttp2_select_padding_callback
+    ); cdecl; external deprecated 'Use nghttp2_session_callbacks_set_select_padding_callback2() with nghttp2_select_padding_callback2 instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
      * Sets callback function invoked when the library asks application
      * how many padding bytes are required for the transmission of the
      * given frame.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_select_padding_callback2(
-in declaration at line 2712 *)
+    }
+    procedure nghttp2_session_callbacks_set_select_padding_callback2(
+        cbs: pnghttp2_session_callbacks;
+        select_padding_callback: nghttp2_select_padding_callback2
+    ); cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -2544,39 +2574,47 @@ in declaration at line 2712 *)
      *
      * Sets callback function determine the length allowed in
      * :type:`nghttp2_data_source_read_callback`.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2730 *)
+    }
+    procedure nghttp2_session_callbacks_set_data_source_read_length_callback(
+        cbs: pnghttp2_session_callbacks;
+        data_source_read_length_callback: nghttp2_data_source_read_length_callback
+    ); cdecl; external deprecated 'Usenghttp2_session_callbacks_set_data_source_read_length_callback2() with nghttp2_data_source_read_length_callback2 instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
      * Sets callback function determine the length allowed in
      * :type:`nghttp2_data_source_read_callback2`.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 2743 *)
+    }
+    procedure nghttp2_session_callbacks_set_data_source_read_length_callback2(
+        cbs: pnghttp2_session_callbacks;
+        data_source_read_length_callback: nghttp2_data_source_read_length_callback2
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when a frame header is received.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_frame_callback(
-in declaration at line 2752 *)
+    }
+    procedure nghttp2_session_callbacks_set_on_begin_frame_callback(
+        cbs: pnghttp2_session_callbacks;
+        on_begin_frame_callback: nghttp2_on_begin_frame_callback
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Sets callback function invoked when
      * :enum:`nghttp2_data_flag.NGHTTP2_DATA_FLAG_NO_COPY` is used in
      * :type:`nghttp2_data_source_read_callback2` to avoid data copy.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_data_callback(
-in declaration at line 2763 *)
+    }
+    procedure nghttp2_session_callbacks_set_send_data_callback(
+        cbs: pnghttp2_session_callbacks;
+        send_data_callback: nghttp2_send_data_callback
+    ); cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
