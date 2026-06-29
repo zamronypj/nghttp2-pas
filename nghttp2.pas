@@ -3683,9 +3683,6 @@ type
         session: pnghttp2_session
     ): longint; cdecl; external;
 
-(* error
-NGHTTP2_EXTERN int nghttp2_session_want_read(nghttp2_session *session);
-in declaration at line 3757 *)
     {*
      * @function
      *
@@ -3695,10 +3692,11 @@ in declaration at line 3757 *)
      * If both `nghttp2_session_want_read()` and
      * `nghttp2_session_want_write()` return 0, the application should
      * drop the connection.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_want_write(nghttp2_session *session);
-in declaration at line 3769 *)
+    }
+    function nghttp2_session_want_write(
+        session: pnghttp2_session
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
