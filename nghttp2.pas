@@ -3643,16 +3643,13 @@ type
      * :enum:`nghttp2_error.NGHTTP2_ERR_FLOODED`
      *     Flooding was detected in this HTTP/2 session, and it must be
      *     closed.  This is most likely caused by misbehaviour of peer.
-      }
-(* error
-NGHTTP2_EXTERN nghttp2_ssize nghttp2_session_mem_recv2(nghttp2_session *session,
-(* error
-                                                       const uint8_t *in,
-(* error
-                                                       size_t inlen);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_mem_recv2(
+        session: pnghttp2_session;
+        constref _in :puint8_t;
+        inlen: size_t
+    ): nghttp2_ssize; cdecl; external;
+
     {*
      * @function
      *
@@ -3666,10 +3663,12 @@ NGHTTP2_EXTERN nghttp2_ssize nghttp2_session_mem_recv2(nghttp2_session *session,
      *     The stream does not exist; or no deferred data exist.
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_resume_data(nghttp2_session *session,
-in declaration at line 3745 *)
+    }
+    function nghttp2_session_resume_data(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3679,7 +3678,11 @@ in declaration at line 3745 *)
      * If both `nghttp2_session_want_read()` and
      * `nghttp2_session_want_write()` return 0, the application should
      * drop the connection.
-      }
+    }
+    function nghttp2_session_want_read(
+        session: pnghttp2_session
+    ): longint; cdecl; external;
+
 (* error
 NGHTTP2_EXTERN int nghttp2_session_want_read(nghttp2_session *session);
 in declaration at line 3757 *)
