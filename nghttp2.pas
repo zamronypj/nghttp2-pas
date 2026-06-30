@@ -3708,10 +3708,12 @@ type
      * initiated by the remote endpoint, stream_user_data is always
      * ``NULL``.  If the stream does not exist, this function returns
      * ``NULL``.
-      }
-(* error
-NGHTTP2_EXTERN void *
-in declaration at line 3785 *)
+    }
+    function nghttp2_session_get_stream_user_data(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): pointer; cdecl; external;
+
     {*
      * @function
      *
@@ -3729,29 +3731,35 @@ in declaration at line 3785 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
      *     The stream does not exist
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3807 *)
+    }
+    function nghttp2_session_set_stream_user_data(
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        stream_user_data: pointer
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Sets |user_data| to |session|, overwriting the existing user data
      * specified in `nghttp2_session_client_new()`, or
      * `nghttp2_session_server_new()`.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_session_set_user_data(nghttp2_session *session,
-in declaration at line 3817 *)
+    }
+    procedure nghttp2_session_set_user_data(
+        session: pnghttp2_session;
+        user_data: pointer
+    ); cdecl; external;
+
     {*
      * @function
      *
      * Returns the number of frames in the outbound queue.  This does not
      * include the deferred DATA frames.
-      }
-(* error
-nghttp2_session_get_outbound_queue_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_outbound_queue_size(
+        session: pnghttp2_session
+    ): size_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3765,13 +3773,12 @@ nghttp2_session_get_outbound_queue_size(nghttp2_session *session);
      * function returns the number of bytes less than actually received.
      *
      * This function returns -1 if it fails.
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_recv_data_length(
-(* error
-  nghttp2_session *session, int32_t stream_id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_stream_effective_recv_data_length(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3788,13 +3795,12 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_recv_data_length(
      * connection level flow control.
      *
      * This function returns -1 if it fails.
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_local_window_size(
-(* error
-  nghttp2_session *session, int32_t stream_id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_stream_effective_local_window_size(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3806,13 +3812,12 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_local_window_size(
      * `nghttp2_session_get_local_window_size()`).
      *
      * This function returns -1 if it fails.
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_local_window_size(
-(* error
-  nghttp2_session *session, int32_t stream_id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_stream_local_window_size(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3826,10 +3831,11 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_local_window_size(
      * of bytes less than actually received.
      *
      * This function returns -1 if it fails.
-      }
-(* error
-nghttp2_session_get_effective_recv_data_length(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_effective_recv_data_length(
+        session: pnghttp2_session
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3846,10 +3852,11 @@ nghttp2_session_get_effective_recv_data_length(nghttp2_session *session);
      * still subject to the stream level flow control.
      *
      * This function returns -1 if it fails.
-      }
-(* error
-nghttp2_session_get_effective_local_window_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_effective_local_window_size(
+        session: pnghttp2_session
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3860,10 +3867,11 @@ nghttp2_session_get_effective_local_window_size(nghttp2_session *session);
      * `nghttp2_session_get_stream_local_window_size()`).
      *
      * This function returns -1 if it fails.
-      }
-(* error
-nghttp2_session_get_local_window_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_local_window_size(
+        session: pnghttp2_session
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3877,59 +3885,65 @@ nghttp2_session_get_local_window_size(nghttp2_session *session);
      * `nghttp2_session_get_remote_window_size()`).
      *
      * This function returns -1 if it fails.
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_remote_window_size(
-(* error
-  nghttp2_session *session, int32_t stream_id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_stream_remote_window_size(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
      * Returns the remote window size for a connection.
      *
      * This function always succeeds.
-      }
-(* error
-nghttp2_session_get_remote_window_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_remote_window_size(
+        session: pnghttp2_session
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
      * Returns 1 if local peer half closed the given stream |stream_id|.
      * Returns 0 if it did not.  Returns -1 if no such stream exists.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3966 *)
+    }
+    function nghttp2_session_get_stream_local_close(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Returns 1 if remote peer half closed the given stream |stream_id|.
      * Returns 0 if it did not.  Returns -1 if no such stream exists.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 3976 *)
+    }
+    function nghttp2_session_get_stream_remote_close(
+        session: pnghttp2_session;
+        stream_id: int32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Returns the current dynamic table size of HPACK inflater, including
      * the overhead 32 bytes per entry described in RFC 7541.
-      }
-(* error
-nghttp2_session_get_hd_inflate_dynamic_table_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_hd_inflate_dynamic_table_size(
+        session: pnghttp2_session
+    ): size_t; cdecl; external;
+
     {*
      * @function
      *
      * Returns the current dynamic table size of HPACK deflater including
      * the overhead 32 bytes per entry described in RFC 7541.
-      }
-(* error
-nghttp2_session_get_hd_deflate_dynamic_table_size(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_hd_deflate_dynamic_table_size(
+        session: pnghttp2_session
+    ): size_t; cdecl; external;
+
     {*
      * @function
      *
@@ -3955,10 +3969,12 @@ nghttp2_session_get_hd_deflate_dynamic_table_size(nghttp2_session *session);
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_terminate_session(nghttp2_session *session,
-in declaration at line 4023 *)
+    }
+    function nghttp2_session_terminate_session(
+        session: pnghttp2_session;
+        error_code: uint32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -3984,10 +4000,13 @@ in declaration at line 4023 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
      *     The |last_stream_id| is invalid.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_terminate_session2(nghttp2_session *session,
-in declaration at line 4053 *)
+    }
+    function nghttp2_session_terminate_session2(
+        session: pnghttp2_session;
+        last_stream_id: int32_t;
+        error_code: uint32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4022,36 +4041,35 @@ in declaration at line 4053 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
      *     The |session| is initialized as client.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_shutdown_notice(nghttp2_session *session);
-in declaration at line 4090 *)
+    }
+    function nghttp2_submit_shutdown_notice(
+        session: pnghttp2_session
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Returns the value of SETTINGS |id| notified by a remote endpoint.
      * The |id| must be one of values defined in
      * :enum:`nghttp2_settings_id`.
-      }
-(* error
-NGHTTP2_EXTERN uint32_t nghttp2_session_get_remote_settings(
-(* error
-  nghttp2_session *session, nghttp2_settings_id id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_remote_settings(
+        session: pnghttp2_session;
+        id: nghttp2_settings_id
+    ): uint32_t; cdecl; external;
+
     {*
      * @function
      *
      * Returns the value of SETTINGS |id| of local endpoint acknowledged
      * by the remote endpoint.  The |id| must be one of the values defined
      * in :enum:`nghttp2_settings_id`.
-      }
-(* error
-NGHTTP2_EXTERN uint32_t nghttp2_session_get_local_settings(
-(* error
-  nghttp2_session *session, nghttp2_settings_id id);
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_session_get_local_settings(
+        session: pnghttp2_session;
+        id: nghttp2_settings_id
+    ): uint32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -4067,20 +4085,23 @@ NGHTTP2_EXTERN uint32_t nghttp2_session_get_local_settings(
      *     `nghttp2_session_get_next_stream_id()` returns; or
      *     |next_stream_id| is invalid (e.g., even integer for client, or
      *     odd integer for server).
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_set_next_stream_id(nghttp2_session *session,
-in declaration at line 4129 *)
+    }
+    function nghttp2_session_get_local_settings(
+        session: pnghttp2_session;
+        next_stream_id: int32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
      * Returns the next outgoing stream ID.  Notice that return type is
      * uint32_t.  If we run out of stream ID for this session, this
      * function returns 1 << 31.
-      }
-(* error
-nghttp2_session_get_next_stream_id(nghttp2_session *session);
- in declarator_list *)
+    }
+    function nghttp2_session_get_next_stream_id(
+        session: pnghttp2_session
+    ): uint32_t; cdecl; external;
+
     {*
      * @function
      *
