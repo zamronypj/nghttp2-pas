@@ -4124,10 +4124,13 @@ type
      *     The |stream_id| is 0.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
      *     Automatic WINDOW_UPDATE is not disabled.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_consume(nghttp2_session *session,
-in declaration at line 4165 *)
+    }
+    function nghttp2_session_consume(
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        size: size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4143,10 +4146,12 @@ in declaration at line 4165 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
      *     Automatic WINDOW_UPDATE is not disabled.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_consume_connection(nghttp2_session *session,
-in declaration at line 4184 *)
+    }
+    function nghttp2_session_consume_connection(
+        session: pnghttp2_session;
+        size: size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4164,10 +4169,13 @@ in declaration at line 4184 *)
      *     The |stream_id| is 0.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
      *     Automatic WINDOW_UPDATE is not disabled.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_consume_stream(nghttp2_session *session,
-in declaration at line 4206 *)
+    }
+    function nghttp2_session_consume_stream(
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        size: size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4178,10 +4186,13 @@ in declaration at line 4206 *)
      *   prioritization scheme.
      *
      * This function is noop.  It always returns 0.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4222 *)
+    }
+    function nghttp2_session_change_stream_priority(
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        constref pri_spec: pnghttp2_priority_spec
+    ): longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
     {*
      * @function
      *
@@ -4192,10 +4203,13 @@ in declaration at line 4222 *)
      *   prioritization scheme.
      *
      * This function is noop.  It always returns 0.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4237 *)
+    }
+    function nghttp2_session_create_idle_stream(
+        session: pnghttp2_session;
+        stream_id: int32_t;
+        constref pri_spec: pnghttp2_priority_spec
+    ): longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
     {*
      * @function
      *
@@ -4242,10 +4256,14 @@ in declaration at line 4237 *)
      *     The |settings_payload| is badly formed.
      * :enum:`nghttp2_error.NGHTTP2_ERR_PROTO`
      *     The stream ID 1 is already used or closed; or is not available.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_upgrade(nghttp2_session *session,
-in declaration at line 4289 *)
+    }
+    function nghttp2_session_upgrade(
+        session: pnghttp2_session;
+        constref settings_payload: puint8_t;
+        settings_payloadlen: size_t;
+        stream_user_data:pointer
+    ): longint; cdecl; external deprecated 'nghttp2_session_upgrade() is deprecated, use nghttp2_session_upgrade2() instead';
+
     {*
      * @function
      *
@@ -4284,10 +4302,15 @@ in declaration at line 4289 *)
      *     The |settings_payload| is badly formed.
      * :enum:`nghttp2_error.NGHTTP2_ERR_PROTO`
      *     The stream ID 1 is already used or closed; or is not available.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_session_upgrade2(nghttp2_session *session,
-in declaration at line 4334 *)
+    }
+    function nghttp2_session_upgrade2(
+        session: pnghttp2_session;
+        constref settings_payload: puint8_t;
+        settings_payloadlen: size_t;
+        head_request: longint;
+        stream_user_data:pointer
+    ): longint; cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -4313,21 +4336,15 @@ in declaration at line 4334 *)
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_INSUFF_BUFSIZE`
      *     The provided |buflen| size is too small to hold the output.
-      }
-(* error
-NGHTTP2_EXTERN ssize_t nghttp2_pack_settings_payload(
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_pack_settings_payload(
+        buf: puint8_t;
+        buflen: size_t;
+        constref iv: pnghttp2_settings_entry;
+        niv: size_t
+    ): ssize_t; cdecl; external deprecated 'Use nghttp2_pack_settings_payload2() instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
@@ -4348,28 +4365,22 @@ NGHTTP2_EXTERN ssize_t nghttp2_pack_settings_payload(
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_INSUFF_BUFSIZE`
      *     The provided |buflen| size is too small to hold the output.
-      }
-(* error
-NGHTTP2_EXTERN nghttp2_ssize nghttp2_pack_settings_payload2(
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
-(* error
-  uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_pack_settings_payload2(
+        buf: puint8_t;
+        buflen: size_t;
+        constref iv: pnghttp2_settings_entry;
+        niv: size_t
+    ): nghttp2_ssize; cdecl; external;
+
     {*
      * @function
      *
      * Returns string describing the |lib_error_code|.  The
      * |lib_error_code| must be one of the :enum:`nghttp2_error`.
-      }
-(* error
-NGHTTP2_EXTERN const char *nghttp2_strerror(int lib_error_code);
- in declarator_list *)
+    }
+    function nghttp2_strerror(lib_error_code: longint): PAnsiChar; cdecl; external;
+
     {*
      * @function
      *
@@ -4377,10 +4388,9 @@ NGHTTP2_EXTERN const char *nghttp2_strerror(int lib_error_code);
      * (e.g., ``PROTOCOL_ERROR`` is returned if ``error_code ==
      * NGHTTP2_PROTOCOL_ERROR``).  If string representation is unknown for
      * given |error_code|, this function returns string ``unknown``.
-      }
-(* error
-NGHTTP2_EXTERN const char *nghttp2_http2_strerror(uint32_t error_code);
- in declarator_list *)
+    }
+    function nghttp2_http2_strerror(error_code: uint32_t): PAnsiChar; cdecl; external;
+
     {*
      * @function
      *
@@ -4396,10 +4406,14 @@ NGHTTP2_EXTERN const char *nghttp2_http2_strerror(uint32_t error_code);
      *
      * The |weight| must be in [:macro:`NGHTTP2_MIN_WEIGHT`,
      * :macro:`NGHTTP2_MAX_WEIGHT`], inclusive.
-      }
-(* error
-NGHTTP2_EXTERN void nghttp2_priority_spec_init(nghttp2_priority_spec *pri_spec,
-in declaration at line 4427 *)
+    }
+    procedure nghttp2_priority_spec_init(
+        pri_spec: pnghttp2_priority_spec;
+        stream_id: int32_t;
+        weight: int32_t;
+        exclusive: longint
+    ) cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
     {*
      * @function
      *
@@ -4412,10 +4426,11 @@ in declaration at line 4427 *)
      * Initializes |pri_spec| with the default values.  The default values
      * are: stream_id = 0, weight = :macro:`NGHTTP2_DEFAULT_WEIGHT` and
      * exclusive = 0.
-      }
-(* error
-NGHTTP2_EXTERN void
-in declaration at line 4443 *)
+    }
+    procedure nghttp2_priority_spec_default_init(
+        pri_spec: pnghttp2_priority_spec
+    ) cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
     {*
      * @function
      *
@@ -4426,10 +4441,11 @@ in declaration at line 4443 *)
      *   prioritization scheme.
      *
      * Returns nonzero if the |pri_spec| is filled with default values.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4457 *)
+    }
+    function nghttp2_priority_spec_check_default(
+        pri_spec: pnghttp2_priority_spec
+    ) longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -4497,27 +4513,18 @@ in declaration at line 4457 *)
      *   `nghttp2_session_set_stream_user_data()` handles this situation
      *   specially, and it can set data to a stream during this period.
      *
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_submit_request(
-(* error
-  nghttp2_session *session, const nghttp2_priority_spec *pri_spec,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider *data_prd,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider *data_prd,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider *data_prd,
-(* error
-  void *stream_user_data);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_submit_request(
+        session: pnghttp2_session;
+        constref pri_spec: pnghttp2_priority_spec;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t;
+        constref data_prd: pnghttp2_data_provider;
+        stream_user_data: pointer
+    ): int32_t; cdecl; external deprecated 'Use nghttp2_submit_request2() instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
@@ -4580,25 +4587,16 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_request(
      *   `nghttp2_session_set_stream_user_data()` handles this situation
      *   specially, and it can set data to a stream during this period.
      *
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_submit_request2(
-(* error
-  nghttp2_session *session, const nghttp2_priority_spec *pri_spec,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider2 *data_prd,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider2 *data_prd,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider2 *data_prd,
-(* error
-  void *stream_user_data);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function ghttp2_submit_request2(
+        session: pnghttp2_session;
+        constref pri_spec: pnghttp2_priority_spec;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t;
+        constref data_prd: pnghttp2_data_provider2;
+        stream_user_data: pointer
+    ): int32_t; cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
