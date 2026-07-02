@@ -4412,7 +4412,7 @@ type
         stream_id: int32_t;
         weight: int32_t;
         exclusive: longint
-    ) cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+    ); cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
 
     {*
      * @function
@@ -4429,7 +4429,7 @@ type
     }
     procedure nghttp2_priority_spec_default_init(
         pri_spec: pnghttp2_priority_spec
-    ) cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+    ); cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
 
     {*
      * @function
@@ -4444,7 +4444,7 @@ type
     }
     function nghttp2_priority_spec_check_default(
         pri_spec: pnghttp2_priority_spec
-    ) longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+    ): longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
 
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
@@ -4588,7 +4588,7 @@ type
      *   specially, and it can set data to a stream during this period.
      *
     }
-    function ghttp2_submit_request2(
+    function nghttp2_submit_request2(
         session: pnghttp2_session;
         constref pri_spec: pnghttp2_priority_spec;
         constref nva: pnghttp2_nv;
@@ -4665,12 +4665,16 @@ type
      *   Calling this function twice for the same stream ID may lead to
      *   program crash.  It is generally considered to a programming error
      *   to commit response twice.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4674 *)
+    }
+    function nghttp2_submit_response(
+        session: pnghttp2_session;
+        stream_id : int32_t;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t;
+        constref data_prd: pnghttp2_data_provider
+    ): longint; cdecl; external deprecated 'Use nghttp2_submit_response2() instead';
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
@@ -4734,10 +4738,15 @@ in declaration at line 4674 *)
      *   Calling this function twice for the same stream ID may lead to
      *   program crash.  It is generally considered to a programming error
      *   to commit response twice.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4745 *)
+    }
+    function nghttp2_submit_response2(
+        session: pnghttp2_session;
+        stream_id : int32_t;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t;
+        constref data_prd: pnghttp2_data_provider2
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4789,10 +4798,14 @@ in declaration at line 4745 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
      *     The |stream_id| is 0.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_trailer(nghttp2_session *session,
-in declaration at line 4801 *)
+    }
+    function nghttp2_submit_trailer(
+        session: pnghttp2_session;
+        stream_id : int32_t;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4869,28 +4882,17 @@ in declaration at line 4801 *)
      *   :type:`nghttp2_before_frame_send_callback` is called for this
      *   frame.
      *
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_submit_headers(
-(* error
-  nghttp2_session *session, uint8_t flags, int32_t stream_id,
-(* error
-  nghttp2_session *session, uint8_t flags, int32_t stream_id,
-(* error
-  const nghttp2_priority_spec *pri_spec, const nghttp2_nv *nva, size_t nvlen,
-(* error
-  const nghttp2_priority_spec *pri_spec, const nghttp2_nv *nva, size_t nvlen,
-(* error
-  const nghttp2_priority_spec *pri_spec, const nghttp2_nv *nva, size_t nvlen,
-(* error
-  void *stream_user_data);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_submit_headers(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id : int32_t;
+        constref pri_spec: pnghttp2_priority_spec;
+        constref nva: pnghttp2_nv;
+        nvlen: size_t;
+        stream_user_data: pointer
+    ): int32_t; cdecl; external;
+
 {$ifndef NGHTTP2_NO_SSIZE_T}
     {*
      * @function
@@ -4936,12 +4938,16 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_headers(
      *   avoid this cascading issue.  The experience shows that for HTTP
      *   use, these two functions are enough to implement both client and
      *   server.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_data(nghttp2_session *session, uint8_t flags,
-in declaration at line 4933 *)
+    }
+    function nghttp2_submit_data(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id : int32_t;
+        constref data_prd: pnghttp2_data_provider
+    ): longint; cdecl; external deprecated 'Use nghttp2_submit_data2() instead';
+
 {$endif}
-    { NGHTTP2_NO_SSIZE_T  }
+
     {*
      * @function
      *
@@ -4982,10 +4988,14 @@ in declaration at line 4933 *)
      *   avoid this cascading issue.  The experience shows that for HTTP
      *   use, these two functions are enough to implement both client and
      *   server.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_data2(nghttp2_session *session, uint8_t flags,
-in declaration at line 4980 *)
+    }
+    function nghttp2_submit_data2(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id : int32_t;
+        constref data_prd: pnghttp2_data_provider2
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -4996,64 +5006,72 @@ in declaration at line 4980 *)
      *   prioritization scheme.
      *
      * This function is noop.  It always returns 0.
-      }
-(* error
-NGHTTP2_EXTERN int
-in declaration at line 4996 *)
+    }
+    function nghttp2_submit_priority(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id : int32_t;
+        constref pri_spec: pnghttp2_priority_spec;
+    ): longint; cdecl; external deprecated 'RFC 7540 priorities are deprecated by RFC 9113.  Consider migrating to RFC 9218 extensible prioritization scheme';
+
+const
+
     {*
      * @macro
      *
      * :macro:`NGHTTP2_EXTPRI_DEFAULT_URGENCY` is the default urgency
      * level for :rfc:`9218` extensible priorities.
-      }
+    }
+    NGHTTP2_EXTPRI_DEFAULT_URGENCY = 3;
 
-    const
-      NGHTTP2_EXTPRI_DEFAULT_URGENCY = 3;
     {*
      * @macro
      *
      * :macro:`NGHTTP2_EXTPRI_URGENCY_HIGH` is the highest urgency level
      * for :rfc:`9218` extensible priorities.
-      }
-      NGHTTP2_EXTPRI_URGENCY_HIGH = 0;
+    }
+    NGHTTP2_EXTPRI_URGENCY_HIGH = 0;
+
     {*
      * @macro
      *
      * :macro:`NGHTTP2_EXTPRI_URGENCY_LOW` is the lowest urgency level for
      * :rfc:`9218` extensible priorities.
-      }
-      NGHTTP2_EXTPRI_URGENCY_LOW = 7;
+    }
+    NGHTTP2_EXTPRI_URGENCY_LOW = 7;
+
     {*
      * @macro
      *
      * :macro:`NGHTTP2_EXTPRI_URGENCY_LEVELS` is the number of urgency
      * levels for :rfc:`9218` extensible priorities.
-      }
-      NGHTTP2_EXTPRI_URGENCY_LEVELS = NGHTTP2_EXTPRI_URGENCY_LOW+1;
+    }
+    NGHTTP2_EXTPRI_URGENCY_LEVELS = NGHTTP2_EXTPRI_URGENCY_LOW+1;
+
+
+type
+
     {*
      * @struct
      *
      * :type:`nghttp2_extpri` is :rfc:`9218` extensible priorities
      * specification for a stream.
-      }
-    {*
-       * :member:`urgency` is the urgency of a stream, it must be in
-       * [:macro:`NGHTTP2_EXTPRI_URGENCY_HIGH`,
-       * :macro:`NGHTTP2_EXTPRI_URGENCY_LOW`], inclusive, and 0 is the
-       * highest urgency.
-        }
-    {*
-       * :member:`inc` indicates that a content can be processed
-       * incrementally or not.  If inc is 0, it cannot be processed
-       * incrementally.  If inc is 1, it can be processed incrementally.
-       * Other value is not permitted.
-        }
+    }
+    nghttp2_extpri = record
+        // `urgency` is the urgency of a stream, it must be in
+        // `NGHTTP2_EXTPRI_URGENCY_HIGH`,
+        // `NGHTTP2_EXTPRI_URGENCY_LOW`], inclusive, and 0 is the
+        // highest urgency.
+        urgency : uint32_t;
 
-    type
-      nghttp2_extpri = record
-          urgency : uint32_t;
-          inc : longint;
-        end;
+        // `inc` indicates that a content can be processed
+        // incrementally or not.  If inc is 0, it cannot be processed
+        // incrementally.  If inc is 1, it can be processed incrementally.
+        // Other value is not permitted.
+        inc : longint;
+    end;
+    pnghttp2_extpri = ^nghttp2_extpri;
+
     {*
      * @function
      *
@@ -5072,10 +5090,14 @@ in declaration at line 4996 *)
      *     Out of memory.
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
      *     The |stream_id| is 0.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_rst_stream(nghttp2_session *session,
-in declaration at line 5074 *)
+    }
+    function nghttp2_submit_rst_stream(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id : int32_t;
+        error_code : int32_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -5105,10 +5127,14 @@ in declaration at line 5074 *)
      *     strictly greater than (1 << 31) - 1.
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_settings(nghttp2_session *session,
-in declaration at line 5109 *)
+    }
+    function nghttp2_submit_settings(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        constref iv : pnghttp2_settings_entry;
+        niv : size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -5179,25 +5205,16 @@ in declaration at line 5109 *)
      *   that stream ID before :type:`nghttp2_before_frame_send_callback`
      *   is called for this frame.
      *
-      }
-(* error
-NGHTTP2_EXTERN int32_t nghttp2_submit_push_promise(
-(* error
-  nghttp2_session *session, uint8_t flags, int32_t stream_id,
-(* error
-  nghttp2_session *session, uint8_t flags, int32_t stream_id,
-(* error
-  const nghttp2_nv *nva, size_t nvlen, void *promised_stream_user_data);
-(* error
-  const nghttp2_nv *nva, size_t nvlen, void *promised_stream_user_data);
-(* error
-  const nghttp2_nv *nva, size_t nvlen, void *promised_stream_user_data);
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
- in declarator_list *)
+    }
+    function nghttp2_submit_push_promise(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        stream_id: int32_t;
+        constref nva : pnghttp2_nv;
+        nvalen : size_t;
+        promised_stream_user_data: pointer
+    ): int32_t; cdecl; external;
+
     {*
      * @function
      *
@@ -5222,10 +5239,13 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_push_promise(
      *
      * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
      *     Out of memory.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_ping(nghttp2_session *session, uint8_t flags,
-in declaration at line 5212 *)
+    }
+    function nghttp2_submit_ping(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        constref opaque_data: puint8_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
@@ -5270,10 +5290,16 @@ in declaration at line 5212 *)
      * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
      *     The |opaque_data_len| is too large; the |last_stream_id| is
      *     invalid.
-      }
-(* error
-NGHTTP2_EXTERN int nghttp2_submit_goaway(nghttp2_session *session,
-in declaration at line 5263 *)
+    }
+    function nghttp2_submit_goaway(
+        session: pnghttp2_session;
+        flags: uint32_t;
+        last_stream_id: int32_t;
+        error_code: uint32_t;
+        constref opaque_data: puint8_t;
+        opaque_data_len: size_t
+    ): longint; cdecl; external;
+
     {*
      * @function
      *
